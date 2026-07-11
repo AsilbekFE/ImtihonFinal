@@ -21,11 +21,9 @@ const Footer = () => {
 
           {/* Links */}
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500">
-            <a href="#" className="hover:text-purple-400 transition-colors">{t('privacy')}</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">{t('terms')}</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">{t('helpCenter')}</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">{t('affiliates')}</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">{t('careers')}</a>
+            <Link to="/terms" className="hover:text-purple-400 transition-colors">{t('terms')}</Link>
+            <Link to="/help" className="hover:text-purple-400 transition-colors">{t('helpCenter')}</Link>
+            <Link to="/partners" className="hover:text-purple-400 transition-colors">{t('affiliates')}</Link>
             <Link to="/about" className="hover:text-purple-400 transition-colors font-semibold text-purple-500/70">{t('about')}</Link>
           </div>
 

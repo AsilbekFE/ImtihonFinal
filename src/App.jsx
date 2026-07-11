@@ -12,6 +12,9 @@ import PaymentPage from './pages/PaymentPage';
 import CertificatesPage from './pages/CertificatesPage';
 import NotificationsPage from './pages/NotificationsPage';
 import AboutPage from './pages/AboutPage';
+import TermsPage from './pages/TermsPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import PartnersPage from './pages/PartnersPage';
 import { AppProvider, AppContext } from './context/AppContext';
 import AuthModal from './components/AuthModal';
 
@@ -34,6 +37,9 @@ const AppContent = () => {
           <Route path="/certificates" element={isLoggedIn ? <CertificatesPage /> : <LoginPage />} />
           <Route path="/notifications" element={isLoggedIn ? <NotificationsPage /> : <LoginPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/help" element={<HelpCenterPage />} />
+          <Route path="/partners" element={<PartnersPage />} />
         </Routes>
       </main>
       <Footer />
