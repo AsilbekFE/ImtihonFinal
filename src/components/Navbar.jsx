@@ -55,9 +55,7 @@ const Navbar = () => {
           
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center transition-transform group-hover:scale-110 animate-pulse-slow">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
+            <img src="/favicon.svg" alt="LuminaEdu Logo" className="w-8 h-8 object-contain transition-transform group-hover:scale-110" />
             <span className="text-white font-bold text-lg">LuminaEdu</span>
           </Link>
 

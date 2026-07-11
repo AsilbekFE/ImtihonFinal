@@ -9,9 +9,34 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
+  const [error, setError] = useState('');
+
+  const getPasswordStrength = (pass) => {
+    if (!pass) return { label: '', color: 'text-gray-500', barColor: 'bg-transparent', width: 'w-0' };
+    if (pass.length < 6) {
+      return { label: 'Oson', color: 'text-red-400', barColor: 'bg-red-500', width: 'w-1/3' };
+    }
+    const hasLetter = /[a-zA-Z]/.test(pass);
+    const hasDigit = /\d/.test(pass);
+    const hasSpecial = /[^A-Za-z0-9]/.test(pass);
+
+    if (pass.length >= 8 && hasLetter && hasDigit && hasSpecial) {
+      return { label: 'Qiyin', color: 'text-green-400', barColor: 'bg-green-500', width: 'w-full' };
+    }
+    if (hasLetter && hasDigit) {
+      return { label: 'Orta', color: 'text-yellow-400', barColor: 'bg-yellow-500', width: 'w-2/3' };
+    }
+    return { label: 'Oson', color: 'text-red-400', barColor: 'bg-red-500', width: 'w-1/3' };
+  };
+
+  const strength = getPasswordStrength(password);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!email.toLowerCase().endsWith('@gmail.com')) {
+      setError("Faqat @gmail.com manzili orqali tizimga kirish yoki ro'yxatdan o'tish mumkin!");
+      return;
+    }
     if (activeTab === 'login') {
       login(email, password);
     } else {
@@ -20,7 +45,7 @@ const LoginPage = () => {
   };
 
   const handleDemoLogin = () => {
-    login('alisher@lumina.edu', 'password123');
+    login('alisher@gmail.com', 'password123');
   };
 
   return (
@@ -42,7 +67,7 @@ const LoginPage = () => {
           {/* Tabs */}
           <div className="flex border-b border-[#1E1E3A] mb-8">
             <button
-              onClick={() => setActiveTab('login')}
+              onClick={() => { setActiveTab('login'); setError(''); }}
               className={`flex-1 pb-3 text-sm font-semibold transition-all relative ${
                 activeTab === 'login' ? 'text-white' : 'text-gray-500'
               }`}
@@ -53,7 +78,7 @@ const LoginPage = () => {
               )}
             </button>
             <button
-              onClick={() => setActiveTab('register')}
+              onClick={() => { setActiveTab('register'); setError(''); }}
               className={`flex-1 pb-3 text-sm font-semibold transition-all relative ${
                 activeTab === 'register' ? 'text-white' : 'text-gray-500'
               }`}
@@ -94,6 +119,12 @@ const LoginPage = () => {
               </>
             )}
 
+            {error && (
+              <div className="p-3 rounded-xl bg-red-900/20 border border-red-500/30 text-red-400 text-xs text-center font-medium animate-pulse">
+                ⚠️ {error}
+              </div>
+            )}
+
             <div>
               <label className="block text-gray-400 text-xs font-semibold mb-2">Email</label>
               <div className="relative">
@@ -101,9 +132,9 @@ const LoginPage = () => {
                 <input
                   type="email"
                   required
-                  placeholder="name@example.com"
+                  placeholder="ism@gmail.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => { setEmail(e.target.value); setError(''); }}
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white text-sm focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-600"
                 />
               </div>
@@ -127,6 +158,19 @@ const LoginPage = () => {
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white text-sm focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-600"
                 />
               </div>
+
+              {/* Password Strength Indicator */}
+              {password && (
+                <div className="mt-2.5 space-y-1">
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className="text-gray-500 font-semibold">Parol mustahkamligi:</span>
+                    <span className={`font-black uppercase tracking-wider ${strength.color}`}>{strength.label}</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-[#0D0D1A] rounded-full overflow-hidden border border-[#1E1E3A]">
+                    <div className={`h-full transition-all duration-300 ${strength.barColor} ${strength.width}`} />
+                  </div>
+                </div>
+              )}
             </div>
 
             <button

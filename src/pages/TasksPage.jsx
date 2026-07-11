@@ -1,6 +1,105 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { AppContext } from '../context/AppContext';
 import { tasksData } from '../data/tasksData';
+
+// ===== LIGHTWEIGHT SYNTAX HIGHLIGHTER (single-pass tokenizer) =====
+const highlight = (code, category) => {
+  // Step 1: escape HTML entities
+  const esc = (s) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const sp = (color, text) => `<span style="color:${color}">${text}</span>`;
+  const escaped = esc(code);
+
+  // ── JavaScript / React ──────────────────────────────────────────────────
+  if (category === 'javascript' || category === 'react') {
+    const KW = new Set([
+      'import','export','default','from','return','const','let','var',
+      'function','async','await','if','else','for','while','of','in',
+      'new','class','extends','null','undefined','true','false',
+      'typeof','this','switch','case','break','continue','try','catch',
+      'finally','throw','delete','void','=>',
+    ]);
+    const HOOKS = new Set([
+      'useState','useEffect','useRef','useContext','useCallback',
+      'useMemo','useReducer','useLayoutEffect','React','Component',
+    ]);
+    // Single alternation — each char matched at most once
+    return escaped.replace(
+      /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\b\d+\.?\d*\b)|(&lt;\/?[A-Za-z][A-Za-z0-9.]*\b|\/&gt;|&gt;)|(\b[a-zA-Z_$][\w$]*\b)/g,
+      (m, comment, str, num, jsx, word) => {
+        if (comment) return sp('#6a9955', m);
+        if (str)     return sp('#ce9178', m);
+        if (num)     return sp('#b5cea8', m);
+        if (jsx)     return sp('#4ec9b0', m);
+        if (word) {
+          if (KW.has(word))    return sp('#569cd6', m);
+          if (HOOKS.has(word)) return sp('#4ec9b0', m);
+          // Detect function calls: word immediately followed by '(' in original
+          // We check the next char in escaped after this match
+        }
+        return m;
+      }
+    );
+  }
+
+  // ── HTML ────────────────────────────────────────────────────────────────
+  if (category === 'html') {
+    return escaped.replace(
+      /(&lt;!--[\s\S]*?--&gt;)|(&lt;\/?[a-zA-Z][a-zA-Z0-9-]*)|(\/?\s*&gt;)|([a-zA-Z:_-]+)(?=\s*=\s*")|("[^"]*")/g,
+      (m, comment, tag, close, attr, str) => {
+        if (comment) return sp('#6a9955', m);
+        if (tag)     return sp('#569cd6', m);
+        if (close)   return sp('#569cd6', m);
+        if (attr)    return sp('#9cdcfe', m);
+        if (str)     return sp('#ce9178', m);
+        return m;
+      }
+    );
+  }
+
+  // ── CSS ─────────────────────────────────────────────────────────────────
+  if (category === 'css') {
+    // Process line-by-line to separate selectors from declarations
+    return escaped.split('\n').map(line => {
+      // Block comments
+      if (/^\s*\/\*/.test(line) || /\*\//.test(line))
+        return sp('#6a9955', line);
+
+      // Closing brace alone
+      if (/^\s*\}\s*$/.test(line))
+        return line.replace(/\}/, sp('#ffd700', '}'));
+
+      // Selector line: contains '{' and no ':' before '{'
+      const braceIdx = line.indexOf('{');
+      if (braceIdx !== -1) {
+        const before = line.slice(0, braceIdx);
+        const rest   = line.slice(braceIdx);
+        if (!before.includes(':')) {
+          return sp('#d7ba7d', before) + sp('#ffd700', '{') + rest.slice(1);
+        }
+      }
+
+      // Declaration line: prop: value;
+      return line.replace(
+        /^(\s*)([\w-]+)(\s*:\s*)(.*?)(;?\s*)$/,
+        (_, indent, prop, colon, val, semi) => {
+          // Colorize values: hex colors, numbers with units, quoted strings
+          const coloredVal = val.replace(
+            /(#[0-9a-fA-F]{3,8})|(\b\d+\.?\d*(?:px|em|rem|%|vh|vw|fr|s|ms|deg|turn)?\b)|("(?:[^"]*)")/g,
+            (m, hex, num, str) => {
+              if (hex || num) return sp('#b5cea8', m);
+              if (str)        return sp('#ce9178', m);
+              return m;
+            }
+          );
+          return `${indent}${sp('#9cdcfe', prop)}${colon}${sp('#ce9178', coloredVal)}${semi}`;
+        }
+      );
+    }).join('\n');
+  }
+
+  return escaped;
+};
 
 const TasksPage = () => {
   const { t, theme } = useContext(AppContext);
@@ -18,6 +117,7 @@ const TasksPage = () => {
 
   const iframeRef = useRef(null);
   const editorRef = useRef(null);
+  const highlightRef = useRef(null);
 
   // Load task
   const handleSelectTask = (task) => {
@@ -219,11 +319,13 @@ const TasksPage = () => {
     }
   };
 
-  // Synchronize Scroll for Line Numbers
+  // Synchronize Scroll for Line Numbers AND highlight overlay
   const handleScroll = (e) => {
     const lineNumbers = document.getElementById('line-numbers');
-    if (lineNumbers) {
-      lineNumbers.scrollTop = e.target.scrollTop;
+    if (lineNumbers) lineNumbers.scrollTop = e.target.scrollTop;
+    if (highlightRef.current) {
+      highlightRef.current.scrollTop = e.target.scrollTop;
+      highlightRef.current.scrollLeft = e.target.scrollLeft;
     }
   };
 
@@ -531,48 +633,74 @@ const TasksPage = () => {
                 </div>
               </div>
 
-              {/* MONOSPACE CODE EDITOR */}
-              <div className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl overflow-hidden flex flex-col flex-1 min-h-[380px] shadow-lg">
-                <div className="bg-[#07070F] border-b border-[#1E1E3A] px-4 py-2.5 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-purple-400 text-xs">📄</span>
-                    <span className="text-white text-xs font-bold font-mono">{activeTask.fileName}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-purple-500" />
-                    <span className="text-[10px] text-gray-400 font-mono">UTF-8</span>
-                  </div>
-                </div>
-
-                <div className="flex-1 flex items-stretch relative overflow-hidden bg-[#07070F]/30">
-                  {/* Line Numbers gutter */}
-                  <div
-                    id="line-numbers"
-                    className="w-12 bg-[#07070F]/70 border-r border-[#1E1E3A] py-4 text-right pr-3 select-none text-gray-600 font-mono text-sm leading-6 overflow-hidden"
-                  >
-                    {code.split('\n').map((_, idx) => (
-                      <div key={idx}>{idx + 1}</div>
-                    ))}
+                {/* MONOSPACE CODE EDITOR WITH SYNTAX HIGHLIGHTING */}
+                <div className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl overflow-hidden flex flex-col flex-1 min-h-[380px] shadow-lg">
+                  <div className="bg-[#07070F] border-b border-[#1E1E3A] px-4 py-2.5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-purple-400 text-xs">📄</span>
+                      <span className="text-white text-xs font-bold font-mono">{activeTask.fileName}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-purple-500" />
+                      <span className="text-[10px] text-gray-400 font-mono">UTF-8</span>
+                    </div>
                   </div>
 
-                  {/* Textarea code field */}
-                  <textarea
-                    ref={editorRef}
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    onScroll={handleScroll}
-                    onKeyDown={handleKeyDown}
-                    spellCheck="false"
-                    className="flex-1 bg-transparent py-4 px-4 text-[#A8B3C4] font-mono text-sm leading-6 focus:outline-none resize-none overflow-y-auto whitespace-pre tab-size-2"
-                    style={{ tabSize: 2 }}
-                  />
-                </div>
+                  <div className="flex-1 flex items-stretch relative overflow-hidden bg-[#07070F]/30">
+                    {/* Line Numbers gutter */}
+                    <div
+                      id="line-numbers"
+                      className="w-12 bg-[#07070F]/70 border-r border-[#1E1E3A] py-4 text-right pr-3 select-none text-gray-600 font-mono text-sm leading-6 overflow-hidden flex-shrink-0"
+                    >
+                      {code.split('\n').map((_, idx) => (
+                        <div key={idx}>{idx + 1}</div>
+                      ))}
+                    </div>
 
-                <div className="bg-[#07070F]/90 border-t border-[#1E1E3A] px-4 py-2 flex items-center justify-between text-[11px] text-gray-500 font-mono">
-                  <span>Tab: 2 spaces</span>
-                  <span>Lines: {code.split('\n').length}</span>
+                    {/* Highlight + Textarea wrapper */}
+                    <div className="flex-1 relative overflow-hidden">
+                      {/* Highlighted code layer (behind textarea) */}
+                      <pre
+                        ref={highlightRef}
+                        aria-hidden="true"
+                        className="absolute inset-0 py-4 px-4 font-mono text-sm leading-6 overflow-auto whitespace-pre pointer-events-none m-0"
+                        style={{
+                          tabSize: 2,
+                          background: 'transparent',
+                          // Do NOT set color:transparent here — that hides span colors too!
+                          scrollbarWidth: 'none',   // Firefox: hide scrollbar on pre
+                          msOverflowStyle: 'none',  // IE/Edge
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: highlight(code, activeTask.category) + '\n'
+                        }}
+                      />
+                      {/* Editable transparent textarea (on top) */}
+                      <textarea
+                        ref={editorRef}
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        onScroll={handleScroll}
+                        onKeyDown={handleKeyDown}
+                        spellCheck="false"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        className="absolute inset-0 w-full h-full bg-transparent py-4 px-4 font-mono text-sm leading-6 focus:outline-none resize-none overflow-auto whitespace-pre"
+                        style={{
+                          tabSize: 2,
+                          color: 'transparent',
+                          caretColor: '#c792ea',
+                          WebkitTextFillColor: 'transparent',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-[#07070F]/90 border-t border-[#1E1E3A] px-4 py-2 flex items-center justify-between text-[11px] text-gray-500 font-mono">
+                    <span>Tab: 2 spaces</span>
+                    <span>Lines: {code.split('\n').length}</span>
+                  </div>
                 </div>
-              </div>
 
             </div>
 

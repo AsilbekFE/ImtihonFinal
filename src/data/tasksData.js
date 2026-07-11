@@ -8,8 +8,12 @@ export const tasksData = [
     fileName: 'index.html',
     description: `Sahifaga rasm joylashtiring. Buning uchun <img> tegidan foydalaning.
 Talablar:
-1. Rasmning manzili (src atributi) "https://picsum.photos/200" bo'lishi kerak.
-2. Rasmning alt atributiga "Tasodifiy rasm" deb yozilishi shart.`,
+1. <img> tegi bo'lishi kerak.
+2. Rasmga havola (src atributi) bo'lishi va bo'sh bo'lmasligi kerak.
+3. Rasmning tavsifi (alt atributi) bo'lishi va bo'sh bo'lmasligi kerak.
+
+Masalan:
+<img src="https://picsum.photos/200" alt="Mening rasmim">`,
     initialCode: `<!-- Rasm tegini shu yerga yozing -->
 `,
     tests: [
@@ -20,22 +24,22 @@ Talablar:
       },
       {
         id: 'img-src',
-        description: "Rasmning 'src' manzili 'https://picsum.photos/200' bo'lishi kerak",
+        description: "Rasmda 'src' atributi bo'lishi va qiymati bo'sh bo'lmasligi kerak",
         check: (doc, win) => {
           const img = doc.querySelector('img');
           if (!img) return false;
-          const src = img.getAttribute('src') || '';
-          return src.trim() === 'https://picsum.photos/200';
+          const src = (img.getAttribute('src') || '').trim();
+          return src.length > 0;
         }
       },
       {
         id: 'img-alt',
-        description: "Rasmning 'alt' matni 'Tasodifiy rasm' bo'lishi kerak",
+        description: "Rasmda 'alt' atributi bo'lishi va qiymati bo'sh bo'lmasligi kerak",
         check: (doc, win) => {
           const img = doc.querySelector('img');
           if (!img) return false;
-          const alt = img.getAttribute('alt') || '';
-          return alt.trim() === 'Tasodifiy rasm';
+          const alt = (img.getAttribute('alt') || '').trim();
+          return alt.length > 0;
         }
       }
     ]

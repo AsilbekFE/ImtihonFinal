@@ -69,9 +69,7 @@ const PaymentPage = () => {
       {/* Mini header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-4 border-b border-[#1E1E3A] flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">L</span>
-          </div>
+          <img src="/favicon.svg" alt="LuminaEdu Logo" className="w-8 h-8 object-contain" />
           <span className="text-white font-bold text-lg">LuminaEdu</span>
         </Link>
         <Link to="/learning" className="text-gray-400 hover:text-white transition-colors text-sm font-semibold flex items-center gap-1">

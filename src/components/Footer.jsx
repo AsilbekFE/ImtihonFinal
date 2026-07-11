@@ -11,9 +11,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
+            <img src="/favicon.svg" alt="LuminaEdu Logo" className="w-8 h-8 object-contain" />
             <span className="text-white font-bold text-lg">LuminaEdu</span>
           </div>
 

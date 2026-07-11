@@ -75,7 +75,7 @@ export const AppProvider = ({ children }) => {
       surname: 'Navoiy',
       title: 'Front-end Developer & AI Enthusiast',
       avatar: '',
-      email: 'alisher@lumina.edu',
+      email: 'alisher@gmail.com',
       purchasedCourses: initialCourses,
       testResults: initialTestResults
     };
