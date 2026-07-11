@@ -1,0 +1,387 @@
+import React, { useState, useEffect, useContext } from 'react';
+import { Link } from '../router/hashRouter';
+import { AppContext } from '../context/AppContext';
+
+const courses = [
+  {
+    id: 1,
+    category: 'UI/UX Design',
+    title: 'Zamonaviy UI/UX Dizayn asoslari',
+    instructor: "Azizbek O'qumov",
+    rating: 4.9,
+    reviews: '(186)',
+    lessons: 24,
+    price: '$49.00',
+    color: 'from-purple-600 to-pink-600',
+    icon: '🎨',
+  },
+  {
+    id: 2,
+    category: 'Python',
+    title: "Python: Nol dan Professional...",
+    instructor: 'Shaxzod Rahimov',
+    rating: 4.8,
+    reviews: '(864)',
+    lessons: 36,
+    price: '$59.00',
+    color: 'from-cyan-600 to-blue-600',
+    icon: '🐍',
+  },
+  {
+    id: 3,
+    category: 'Marketing',
+    title: 'SMM va Digital Marketing...',
+    instructor: 'Malika Ahmedova',
+    rating: 4.7,
+    reviews: '(420)',
+    lessons: 18,
+    price: '$39.00',
+    color: 'from-green-600 to-teal-600',
+    icon: '📈',
+  },
+  {
+    id: 4,
+    category: 'AI & Data',
+    title: "Sun'iy Intellekt: Kelajak...",
+    instructor: 'Botir Ziyadov',
+    rating: 5.0,
+    reviews: '(390)',
+    lessons: 42,
+    price: '$49.00',
+    color: 'from-orange-600 to-red-600',
+    icon: '🤖',
+  },
+];
+
+const getFeatures = (t) => [
+  {
+    icon: '▶️',
+    title: t('feat1Title'),
+    desc: t('feat1Desc'),
+  },
+  {
+    icon: '🏆',
+    title: t('feat2Title'),
+    desc: t('feat2Desc'),
+  },
+  {
+    icon: '💡',
+    title: t('feat3Title'),
+    desc: t('feat3Desc'),
+  },
+];
+
+const stats = [
+  { value: '10,000+', translationKey: 'students' },
+  { value: '50+', translationKey: 'coursesCount' },
+  { value: '100+', translationKey: 'mentors' },
+];
+
+const HomePage = () => {
+  const { buyCourse, t } = useContext(AppContext);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const features = getFeatures(t);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % courses.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleSlide = (dir) => {
+    if (animating) return;
+    setAnimating(true);
+    setCurrentSlide((prev) => (prev + dir + courses.length) % courses.length);
+    setTimeout(() => setAnimating(false), 400);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0D0D1A]">
+      {/* ===== HERO SECTION ===== */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background glows */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-700/20 rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-700/15 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 w-full">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left content */}
+            <div className="fade-up">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-600/15 border border-purple-500/30 text-purple-400 text-xs font-semibold mb-6">
+                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-ping" />
+                {t('newLessons')}
+              </div>
+
+              <h1 className="text-5xl lg:text-6xl font-black leading-tight text-white mb-6">
+                {t('heroTitle').split(' ')[0]}{' '}
+                <span className="text-gradient">{t('heroTitle').split(' ').slice(1, 3).join(' ')}</span>
+                <br />
+                {t('heroTitle').split(' ').slice(3).join(' ')}
+              </h1>
+
+              <p className="text-gray-400 text-lg leading-relaxed mb-10 max-w-lg">
+                {t('heroDesc')}
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  to="/learning"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-500 hover:to-purple-600 transition-all duration-200 glow-purple hover:scale-105"
+                >
+                  {t('seeCourses')}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+                <Link
+                  to="/about"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[#1E1E3A] text-gray-300 font-semibold hover:border-purple-500/50 hover:text-white hover:bg-purple-600/10 transition-all duration-200"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  {t('aboutPlatform')}
+                </Link>
+              </div>
+            </div>
+
+            {/* Right - Course card */}
+            <div className="relative flex justify-center">
+              <div className="relative w-full max-w-md">
+                {/* Floating badge */}
+                <div className="absolute -top-4 -right-4 z-20 bg-[#13132A] border border-purple-500/40 rounded-xl px-3 py-2 flex items-center gap-2 animate-float shadow-xl">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-semibold">{t('profCert')}</span>
+                </div>
+
+                {/* Main card */}
+                <div className="bg-gradient-to-br from-[#13132A] to-[#1a1040] border border-purple-500/20 rounded-2xl overflow-hidden shadow-2xl">
+                  <div className={`h-52 bg-gradient-to-br ${courses[currentSlide].color} flex items-center justify-center relative`}>
+                    <span className="text-7xl">{courses[currentSlide].icon}</span>
+                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute bottom-3 left-3 right-3 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
+                      <div className="text-white/70 text-xs">{t('ongoing')}</div>
+                      <div className="text-white text-sm font-bold">{courses[currentSlide].title}</div>
+                    </div>
+                  </div>
+
+                  <div className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs text-purple-400 font-semibold">{courses[currentSlide].category}</span>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <svg key={i} className={`w-3 h-3 ${i < Math.floor(courses[currentSlide].rating) ? 'text-yellow-400' : 'text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                        <span className="text-gray-500 text-xs ml-1">{courses[currentSlide].reviews}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-xs">{courses[currentSlide].instructor}</p>
+                        <p className="text-white font-bold text-lg">{courses[currentSlide].price}</p>
+                      </div>
+                      <button 
+                        onClick={() => buyCourse({
+                          title: courses[currentSlide].title,
+                          category: courses[currentSlide].category,
+                          priceVal: courses[currentSlide].price === '$49.00' ? 490000 : 590000,
+                          discountVal: 49000,
+                          icon: courses[currentSlide].icon,
+                          color: courses[currentSlide].color
+                        })}
+                        className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm font-semibold hover:from-purple-500 hover:to-purple-600 transition-all"
+                      >
+                        {t('buy')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Slide dots */}
+                <div className="flex justify-center gap-2 mt-4">
+                  {courses.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentSlide(i)}
+                      className={`transition-all duration-300 rounded-full ${
+                        i === currentSlide ? 'w-6 h-2 bg-purple-500' : 'w-2 h-2 bg-gray-600 hover:bg-purple-500/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-4 mt-16">
+            {stats.map((stat, i) => (
+              <div key={i} className="bg-[#13132A]/80 border border-[#1E1E3A] rounded-xl p-5 text-center hover:border-purple-500/30 transition-all">
+                <div className="text-3xl font-black text-white mb-1">{stat.value}</div>
+                <div className="text-gray-500 text-xs font-semibold tracking-widest">{t(stat.translationKey)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== WHY US SECTION ===== */}
+      <section className="py-20 bg-[#07070F]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+            <div>
+              <p className="text-gray-500 text-sm font-semibold uppercase tracking-widest mb-2">{t('whyUs')}</p>
+              <h2 className="text-4xl font-black text-white">
+                {t('threeKeys').split(' ')[0]} <span className="text-gradient">{t('threeKeys').split(' ').slice(1).join(' ')}</span>
+              </h2>
+            </div>
+            <p className="text-gray-400 max-w-xs text-sm">
+              {t('whyDesc')}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {features.map((f, i) => (
+              <div
+                key={i}
+                className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl p-6 hover:border-purple-500/40 hover:bg-[#16163A] transition-all duration-300 group"
+              >
+                <div className="w-12 h-12 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-2xl">
+                  {f.icon}
+                </div>
+                <h3 className="text-white font-bold text-lg mb-2">{f.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== POPULAR COURSES ===== */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-black text-white">
+              <span className="text-gray-400 font-normal">{t('popular')}</span> {t('popularCourses')}
+            </h2>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleSlide(-1)}
+                className="w-9 h-9 rounded-lg bg-[#13132A] border border-[#1E1E3A] flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={() => handleSlide(1)}
+                className="w-9 h-9 rounded-lg bg-[#13132A] border border-[#1E1E3A] flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {courses.map((course) => (
+              <div
+                key={course.id}
+                className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl overflow-hidden hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
+              >
+                <div className={`h-40 bg-gradient-to-br ${course.color} relative flex items-center justify-center`}>
+                  <span className="text-5xl">{course.icon}</span>
+                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="absolute top-2 left-2 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+                    {course.category}
+                  </div>
+                </div>
+
+                <div className="p-4">
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className={`w-3 h-3 ${i < Math.floor(course.rating) ? 'text-yellow-400' : 'text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span className="text-gray-500 text-xs">{course.rating} {course.reviews}</span>
+                    <span className="text-gray-600 text-xs ml-auto">{course.lessons} {t('lessonsCount')}</span>
+                  </div>
+
+                  <h3 className="text-white font-semibold text-sm mb-3 leading-snug group-hover:text-purple-300 transition-colors">
+                    {course.title}
+                  </h3>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-500 text-xs">{course.instructor}</p>
+                      <p className="text-purple-400 font-bold">{course.price}</p>
+                    </div>
+                    <button 
+                      onClick={() => buyCourse({
+                        title: course.title,
+                        category: course.category,
+                        priceVal: course.price === '$49.00' ? 490000 : course.price === '$59.00' ? 590000 : 390000,
+                        discountVal: 39000,
+                        icon: course.icon,
+                        color: course.color
+                      })}
+                      className="px-3 py-1.5 rounded-lg bg-purple-600/20 text-purple-400 text-xs font-semibold hover:bg-purple-600 hover:text-white transition-all border border-purple-500/30"
+                    >
+                      {t('buy')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CTA SECTION ===== */}
+      <section className="py-20 bg-[#07070F]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative bg-gradient-to-br from-[#13132A] to-[#1a0533] border border-purple-500/20 rounded-3xl p-12 text-center overflow-hidden">
+            {/* Background elements */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl" />
+              <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-cyan-600/10 rounded-full blur-3xl" />
+            </div>
+
+            <h2 className="relative text-4xl lg:text-5xl font-black text-white mb-4">
+              {t('ctaTitle').split(' ').slice(0, 2).join(' ')}{' '}
+              <span className="text-gradient">{t('ctaTitle').split(' ').slice(2, 4).join(' ')}</span>{' '}
+              {t('ctaTitle').split(' ').slice(4).join(' ')}
+            </h2>
+            <p className="relative text-gray-400 mb-8 text-lg">
+              {t('ctaDesc')}
+            </p>
+
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold text-lg hover:from-purple-500 hover:to-purple-600 transition-all glow-purple hover:scale-105"
+            >
+              {t('registerNow')}
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default HomePage;

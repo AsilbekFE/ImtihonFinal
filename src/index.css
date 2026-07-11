@@ -1,0 +1,256 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #0D0D1A;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0D0D1A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7C3AED;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6D28D9;
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #7C3AED, #06B6D4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+  }
+  
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+  }
+  
+  .glass {
+    background: rgba(19, 19, 42, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(124, 58, 237, 0.15);
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulseSlow 4s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.fade-up {
+  animation: fadeUp 0.4s ease-out;
+}
+
+/* ==========================================================================
+   Light Mode Theme Overrides
+   ========================================================================== */
+
+.light body {
+  background-color: #F8FAFC;
+  color: #0F172A;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+}
+
+.light .bg-\[\#0D0D1A\] {
+  background-color: #F8FAFC !important;
+}
+
+.light .bg-\[\#07070F\] {
+  background-color: #F1F5F9 !important;
+}
+
+.light .bg-\[\#13132A\] {
+  background-color: #FFFFFF !important;
+}
+
+.light .bg-\[\#13132A\]\/90 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.light .bg-\[\#13132A\]\/80 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.light .bg-\[\#13132A\]\/50 {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.light .border-\[\#1E1E3A\] {
+  border-color: #E2E8F0 !important;
+}
+
+.light .border-\[\#1E1E3A\]\/50 {
+  border-color: rgba(226, 232, 240, 0.5) !important;
+}
+
+.light .border-purple-500\/10 {
+  border-color: rgba(124, 58, 237, 0.1) !important;
+}
+
+.light .border-purple-500\/20 {
+  border-color: rgba(124, 58, 237, 0.15) !important;
+}
+
+.light .text-white {
+  color: #0F172A !important;
+}
+
+/* Retain white text for specific labels, badges, and components */
+.light .text-white-force,
+.light .bg-gradient-to-r text,
+.light button.bg-gradient-to-r,
+.light button.bg-purple-600,
+.light button.bg-gradient-to-br,
+.light a.bg-gradient-to-r,
+.light .bg-gradient-to-r,
+.light .bg-gradient-to-r *,
+.light .bg-gradient-to-br *,
+.light .bg-purple-600 *,
+.light .bg-green-600 *,
+.light .bg-red-600 *,
+.light .bg-black\/50 *,
+.light .bg-black\/50,
+.light .text-white\.font-bold,
+.light .text-white\.font-black {
+  color: #FFFFFF !important;
+}
+
+.light .text-gray-400 {
+  color: #475569 !important;
+}
+
+.light .text-gray-500 {
+  color: #64748B !important;
+}
+
+.light .text-gray-600 {
+  color: #94A3B8 !important;
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(124, 58, 237, 0.1) !important;
+}
+
+.light .bg-gradient-to-br.from-\[\#13132A\] {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%) !important;
+  border-color: #E2E8F0 !important;
+}
+
+.light .bg-\[\#0D0D1A\]\/95 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.light .bg-\[\#07070F\]\/95 {
+  background-color: rgba(241, 245, 249, 0.95) !important;
+}
+
+.light .bg-\[\#07070F\]\/98 {
+  background-color: rgba(241, 245, 249, 0.98) !important;
+}
+
+.light input {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+.light input::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Nav background overrides */
+.light nav {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom-color: #E2E8F0 !important;
+}
+
+/* Inner card / sub-bg */
+.light .bg-\[\#1E1E3A\] {
+  background-color: #F1F5F9 !important;
+}
+
+.light .bg-\[\#1E1E3A\]\/40 {
+  background-color: rgba(241, 245, 249, 0.4) !important;
+}
+
+/* Select dropdowns */
+.light select {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* Textarea */
+.light textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* Border overrides for dark backgrounds with opacity */
+.light .border-\[\#1E1E3A\]\/80 {
+  border-color: rgba(226, 232, 240, 0.8) !important;
+}
+
+/* Fix sidebar bg */
+.light .bg-\[\#0D0D1A\] input {
+  background-color: #F8FAFC !important;
+}
