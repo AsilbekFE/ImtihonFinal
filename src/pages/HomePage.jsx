@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from '../router/hashRouter';
+import { Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 
 const courses = [
@@ -77,9 +77,18 @@ const stats = [
   { value: '100+', translationKey: 'mentors' },
 ];
 
+const mentors = [
+  { id: 1, name: "Azizbek O'qumov", role: "UI/UX Art Director", company: "Google", avatar: "👨‍🎨", color: "from-pink-500 to-purple-600" },
+  { id: 2, name: "Shaxzod Rahimov", role: "Lead Python Developer", company: "Amazon", avatar: "👨‍💻", color: "from-cyan-500 to-blue-600" },
+  { id: 3, name: "Malika Ahmedova", role: "Marketing Strategist", company: "Meta", avatar: "👩‍💼", color: "from-green-500 to-teal-600" },
+  { id: 4, name: "Botir Ziyadov", role: "AI & ML Specialist", company: "OpenAI", avatar: "🤖", color: "from-orange-500 to-red-600" },
+  { id: 5, name: "Dilshod Karimov", role: "Senior Full-Stack Engineer", company: "Microsoft", avatar: "👨‍💻", color: "from-purple-500 to-indigo-600" }
+];
+
 const HomePage = () => {
   const { buyCourse, t } = useContext(AppContext);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentMentorSlide, setCurrentMentorSlide] = useState(0);
   const [animating, setAnimating] = useState(false);
   const features = getFeatures(t);
 
@@ -90,11 +99,22 @@ const HomePage = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMentorSlide((prev) => (prev + 1) % mentors.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleSlide = (dir) => {
     if (animating) return;
     setAnimating(true);
     setCurrentSlide((prev) => (prev + dir + courses.length) % courses.length);
     setTimeout(() => setAnimating(false), 400);
+  };
+
+  const handleMentorSlide = (dir) => {
+    setCurrentMentorSlide((prev) => (prev + dir + mentors.length) % mentors.length);
   };
 
   return (
@@ -110,8 +130,8 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 w-full">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left content */}
-            <div className="fade-up">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-600/15 border border-purple-500/30 text-purple-400 text-xs font-semibold mb-6">
+            <div className="fade-up" data-aos="fade-right">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-600/15 border border-purple-500/30 text-purple-400 text-xs font-semibold mb-6" data-aos="zoom-in">
                 <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-ping" />
                 {t('newLessons')}
               </div>
@@ -150,7 +170,7 @@ const HomePage = () => {
             </div>
 
             {/* Right - Course card */}
-            <div className="relative flex justify-center">
+            <div className="relative flex justify-center" data-aos="fade-left">
               <div className="relative w-full max-w-md">
                 {/* Floating badge */}
                 <div className="absolute -top-4 -right-4 z-20 bg-[#13132A] border border-purple-500/40 rounded-xl px-3 py-2 flex items-center gap-2 animate-float shadow-xl">
@@ -225,7 +245,7 @@ const HomePage = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-16">
+          <div className="grid grid-cols-3 gap-4 mt-16" data-aos="fade-up" data-aos-delay="200">
             {stats.map((stat, i) => (
               <div key={i} className="bg-[#13132A]/80 border border-[#1E1E3A] rounded-xl p-5 text-center hover:border-purple-500/30 transition-all">
                 <div className="text-3xl font-black text-white mb-1">{stat.value}</div>
@@ -255,6 +275,8 @@ const HomePage = () => {
             {features.map((f, i) => (
               <div
                 key={i}
+                data-aos="fade-up"
+                data-aos-delay={i * 100}
                 className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl p-6 hover:border-purple-500/40 hover:bg-[#16163A] transition-all duration-300 group"
               >
                 <div className="w-12 h-12 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-2xl">
@@ -296,9 +318,11 @@ const HomePage = () => {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {courses.map((course) => (
+            {courses.map((course, idx) => (
               <div
                 key={course.id}
+                data-aos="fade-up"
+                data-aos-delay={idx * 100}
                 className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl overflow-hidden hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
               >
                 <div className={`h-40 bg-gradient-to-br ${course.color} relative flex items-center justify-center`}>
@@ -348,6 +372,93 @@ const HomePage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== MENTORS SLIDER SECTION ===== */}
+      <section className="py-20 bg-[#07070F]/50 border-t border-[#1E1E3A]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
+            <div data-aos="fade-right">
+              <span className="text-xs font-bold tracking-widest text-purple-400 uppercase bg-purple-600/10 px-3 py-1 rounded-full border border-purple-500/20">
+                {t('mentors') || 'Mentors'}
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-white mt-3">
+                Bizning professional <span className="text-gradient">mentorlarimiz</span>
+              </h2>
+            </div>
+            
+            {/* Controls */}
+            <div className="flex gap-2" data-aos="fade-left">
+              <button
+                onClick={() => handleMentorSlide(-1)}
+                className="w-10 h-10 rounded-xl bg-[#13132A] border border-[#1E1E3A] flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all shadow-md"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={() => handleMentorSlide(1)}
+                className="w-10 h-10 rounded-xl bg-[#13132A] border border-[#1E1E3A] flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all shadow-md"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Mentor Active Card Container with Slider animations */}
+          <div className="relative overflow-hidden min-h-[220px]" data-aos="zoom-in">
+            <div className="flex gap-6 justify-center items-center">
+              {/* Show active and adjacent mentors for a nice slide carousel preview */}
+              {[-1, 0, 1].map((offset) => {
+                const index = (currentMentorSlide + offset + mentors.length) % mentors.length;
+                const mentor = mentors[index];
+                const isActive = offset === 0;
+
+                return (
+                  <div
+                    key={mentor.id}
+                    className={`transition-all duration-500 rounded-3xl p-6 border flex flex-col sm:flex-row items-center gap-6 shadow-xl ${
+                      isActive
+                        ? 'bg-[#13132A] border-purple-500/30 scale-100 opacity-100 w-full max-w-xl z-10'
+                        : 'bg-[#13132A]/40 border-[#1E1E3A] scale-90 opacity-40 hidden md:flex w-72'
+                    }`}
+                  >
+                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${mentor.color} flex items-center justify-center text-4xl flex-shrink-0 shadow-lg`}>
+                      {mentor.avatar}
+                    </div>
+                    <div className="text-center sm:text-left flex-1 min-w-0">
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-purple-600/15 text-purple-400 border border-purple-500/20">
+                        {mentor.company}
+                      </span>
+                      <h4 className="text-white font-extrabold text-lg sm:text-xl mt-2 truncate">
+                        {mentor.name}
+                      </h4>
+                      <p className="text-gray-400 text-sm font-medium mt-1">
+                        {mentor.role}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Slider Dots */}
+            <div className="flex justify-center gap-2 mt-8">
+              {mentors.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentMentorSlide(i)}
+                  className={`transition-all duration-300 rounded-full ${
+                    i === currentMentorSlide ? 'w-6 h-2 bg-purple-500' : 'w-2 h-2 bg-gray-700 hover:bg-purple-500/50'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>

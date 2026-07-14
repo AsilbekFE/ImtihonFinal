@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import { navigate } from '../router/hashRouter';
 
 const AuthModal = () => {
   const { showAuthModal, setShowAuthModal, t } = useContext(AppContext);
+  const navigate = useNavigate();
 
   if (!showAuthModal) return null;
 

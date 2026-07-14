@@ -1,6 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation } from '../router/hashRouter';
+import { Link, useLocation } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
+
+const searchItems = [
+  { title: "Advanced UI/UX Principles Kursi", path: "/learning" },
+  { title: "AI & Modern Automation Kursi", path: "/learning" },
+  { title: "Full-stack Web Development", path: "/learning" },
+  { title: "Counter (Hisoblagich) Arena", path: "/tasks" },
+  { title: "Level Test: Upper-Int", path: "/test" },
+  { title: "UX Designer Entry Test", path: "/test" },
+  { title: "Faktorial hisoblash (JS)", path: "/tasks" },
+  { title: "Palindrom tekshirish (JS)", path: "/tasks" },
+  { title: "API orqali user yuklash (React)", path: "/tasks" },
+  { title: "Mening Sertifikatlarim", path: "/certificates" },
+  { title: "Foydalanuvchi Profili", path: "/profile" },
+  { title: "Biz haqimizda ma'lumot", path: "/about" },
+];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -16,6 +31,28 @@ const Navbar = () => {
     changeLang, 
     t 
   } = useContext(AppContext);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
+    const delay = setTimeout(() => {
+      const query = searchQuery.toLowerCase();
+      const filtered = searchItems.filter(item => 
+        item.title.toLowerCase().includes(query)
+      );
+      setSearchResults(filtered);
+      setIsSearching(false);
+    }, 450);
+    return () => clearTimeout(delay);
+  }, [searchQuery]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -54,19 +91,19 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
             <img src="/favicon.svg" alt="LuminaEdu Logo" className="w-8 h-8 object-contain transition-transform group-hover:scale-110" />
             <span className="text-white font-bold text-lg">LuminaEdu</span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-0.5 xl:gap-1 flex-shrink-0">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={(e) => handleLinkClick(e, link.path)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-2.5 py-1.5 xl:px-4 xl:py-2 rounded-lg text-xs xl:text-sm font-semibold transition-all duration-200 ${
                   isActive(link.path)
                     ? 'text-white bg-purple-600/20 border border-purple-500/30'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -78,17 +115,46 @@ const Navbar = () => {
           </div>
 
           {/* Right side controls */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-1.5 xl:gap-3 flex-shrink-0">
             {/* Search */}
             <div className="relative">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('search')}
-                className="bg-[#13132A] border border-[#1E1E3A] rounded-lg px-4 py-2 pl-9 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-purple-500 w-32 transition-all focus:w-44"
+                className="bg-[#13132A] border border-[#1E1E3A] rounded-lg px-2.5 py-1.5 pl-8 text-xs xl:text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-purple-500 w-24 xl:w-32 transition-all focus:w-32 xl:focus:w-44"
               />
-              <svg className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
+
+              {/* Search results & Loader Dropdown */}
+              {(isSearching || searchQuery.trim().length > 0) && (
+                <div className="absolute right-0 top-12 w-64 bg-[#13132A]/95 border border-[#1E1E3A] rounded-xl shadow-2xl overflow-hidden z-50 p-2 backdrop-blur-xl">
+                  {isSearching ? (
+                    <div className="flex items-center justify-center py-4 gap-2">
+                      <div className="w-4 h-4 rounded-full border-2 border-purple-500/20 border-t-purple-500 animate-spin" />
+                      <span className="text-gray-400 text-xs font-semibold">Qidirilmoqda...</span>
+                    </div>
+                  ) : searchResults.length > 0 ? (
+                    <div className="max-h-60 overflow-y-auto space-y-1">
+                      {searchResults.map((item, idx) => (
+                        <Link
+                          key={idx}
+                          to={item.path}
+                          onClick={() => setSearchQuery('')}
+                          className="block px-3 py-2 rounded-lg text-left text-xs font-semibold text-gray-300 hover:text-white hover:bg-purple-600/20 transition-all border border-transparent hover:border-purple-500/20"
+                        >
+                          🔍 {item.title}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-gray-500 text-xs py-3 text-center">Natija topilmadi</div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Language Selector */}
@@ -165,7 +231,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile controls & toggle button */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             {/* Small theme toggle */}
             <button
               onClick={toggleTheme}
@@ -205,7 +271,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-[#07070F]/98 backdrop-blur-xl border-b border-[#1E1E3A] px-4 pb-4">
+        <div className="lg:hidden bg-[#07070F]/98 backdrop-blur-xl border-b border-[#1E1E3A] px-4 pb-4">
           {navLinks.map((link) => (
             <Link
               key={link.path}

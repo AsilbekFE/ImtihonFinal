@@ -281,6 +281,7 @@ const TasksPage = () => {
       `);
       doc.close();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [renderTrigger, activeTask, theme]);
 
   // Validate Code
@@ -544,7 +545,7 @@ const TasksPage = () => {
                     <span>🎯</span> Tekshirish mezonlari
                   </h3>
                   <div className="space-y-2.5">
-                    {activeTask.tests.map((test, i) => {
+                    {activeTask.tests.map((test) => {
                       const ran = runClicked;
                       const testRes = testResults.find(r => r.id === test.id);
                       const passed = testRes?.passed;

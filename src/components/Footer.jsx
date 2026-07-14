@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from '../router/hashRouter';
+import { Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 
 const Footer = () => {

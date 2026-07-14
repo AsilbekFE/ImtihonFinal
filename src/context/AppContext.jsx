@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { navigate } from '../router/hashRouter';
 import { translations } from '../data/translations';
+
+const navigate = (path) => { window.location.hash = path; };
 
 export const AppContext = createContext();
 

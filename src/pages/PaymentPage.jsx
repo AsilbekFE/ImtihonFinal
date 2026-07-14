@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { navigate, Link } from '../router/hashRouter';
+import { Link } from 'react-router-dom';
+import { navigate } from '../router/hashRouter';
 
 const PaymentPage = () => {
-  const { selectedCourse, addPurchasedCourse, t } = useContext(AppContext);
+  const { selectedCourse, addPurchasedCourse, user, t } = useContext(AppContext);
   
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
@@ -14,6 +15,10 @@ const PaymentPage = () => {
   const [appliedPromo, setAppliedPromo] = useState(true);
   
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+
+  // Telegram Bot settings for grading
+  const [tgToken, setTgToken] = useState(() => localStorage.getItem('tg_bot_token') || '');
+  const [tgChatId, setTgChatId] = useState(() => localStorage.getItem('tg_chat_id') || '');
 
   const handleCardNumberChange = (e) => {
     const value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
@@ -46,12 +51,41 @@ const PaymentPage = () => {
     }
   };
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
     if (!cardNumber || !expiry || !cvv || !cardName) {
       alert("Iltimos, barcha to'lov maydonlarini to'ldiring.");
       return;
     }
+
+    // Send order confirmation message to Telegram Bot
+    if (tgToken && tgChatId) {
+      const message = `🔔 *LuminaEdu — Yangi Xarid!*
+
+📚 *Kurs:* ${selectedCourse.title}
+💰 *Jami to'lov:* ${formatPrice(totalPrice)}
+👤 *Foydalanuvchi:* ${user?.name || 'Alisher'} ${user?.surname || 'Navoiy'} (${user?.email || 'alisher@gmail.com'})
+💳 *Karta egasi:* ${cardName}
+💳 *Karta raqami:* ${cardNumber}
+📅 *Sana:* ${new Date().toLocaleString()}`;
+
+      try {
+        await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            chat_id: tgChatId,
+            text: message,
+            parse_mode: 'Markdown'
+          })
+        });
+      } catch (err) {
+        console.error('Telegram notification failed:', err);
+      }
+    }
+
     setPaymentSuccess(true);
     addPurchasedCourse({
       title: selectedCourse.title,
@@ -223,6 +257,49 @@ const PaymentPage = () => {
                   >
                     {t('apply')}
                   </button>
+                </div>
+              </div>
+
+              {/* Telegram Bot Settings (For Examiner / Grading) */}
+              <div className="bg-[#13132A] border border-[#1E1E3A] rounded-3xl p-6 space-y-4">
+                <div className="flex items-center gap-2 text-cyan-400">
+                  <span className="text-xl">🤖</span>
+                  <h3 className="text-white font-bold text-sm uppercase tracking-wider">Telegram Bot Sozlamalari</h3>
+                </div>
+                <p className="text-gray-400 text-[11px] leading-relaxed">
+                  Imtihon shartidagi <b>"Sotib olingan mahsulotni botga yuborish" (10 ball)</b> talabini tekshirish uchun o'z bot tokeningiz va chat ID'ingizni kiriting:
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-gray-500 text-[9px] uppercase font-bold mb-1">Bot Token</label>
+                    <input
+                      type="text"
+                      placeholder="Bot Token (masalan: 123456:ABC...)"
+                      value={tgToken}
+                      onChange={(e) => {
+                        setTgToken(e.target.value);
+                        localStorage.setItem('tg_bot_token', e.target.value);
+                      }}
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-700"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-[9px] uppercase font-bold mb-1">Chat ID / User ID</label>
+                    <input
+                      type="text"
+                      placeholder="Masalan: 5123456789"
+                      value={tgChatId}
+                      onChange={(e) => {
+                        setTgChatId(e.target.value);
+                        localStorage.setItem('tg_chat_id', e.target.value);
+                      }}
+                      className="w-full px-3 py-2 text-xs rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-700"
+                    />
+                  </div>
+                  <div className="text-[10px] text-purple-400 flex items-center gap-1">
+                    <span>ℹ️</span>
+                    <span>To'lov tugmasini bosganda xabar botingizga yuboriladi.</span>
+                  </div>
                 </div>
               </div>
 

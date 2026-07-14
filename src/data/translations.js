@@ -1,16 +1,12 @@
 export const translations = {
   uz: {
     // Navbar
-    explore: "Explore",
-    myLearning: "My Learning",
-    test: "Test",
+    explore: "Kashf etish",
+    myLearning: "Mening kurslarim",
+    test: "Test topshirish",
     tasks: "Topshiriqlar",
-    certificates: "Certificates",
+    certificates: "Sertifikatlar",
     about: "Biz haqimizda",
-    terms: "Foydalanish shartlari",
-    helpCenter: "Yordam markazi",
-    affiliates: "Hamkorlar",
-    footerDesc: "Kelajak mutaxassislarini yetishtiruvchi zamonaviy ta'lim platformasi.",
     search: "Qidirish...",
     login: "Kirish",
     profile: "Profil",
@@ -134,7 +130,7 @@ export const translations = {
     termsText: "Davom etish orqali foydalanish shartlariga rozilik bildirasiz.",
 
     // Footer
-    footerDesc: "Zamonaviy ta'lim platformasi. Biz bilan kelajak boshlanadi.",
+    footerDesc: "Kelajak mutaxassislarini yetishtiruvchi zamonaviy ta'lim platformasi.",
     privacy: "Maxfiylik siyosati",
     terms: "Foydalanish shartlari",
     helpCenter: "Yordam markazi",
@@ -205,10 +201,6 @@ export const translations = {
     tasks: "Задания",
     certificates: "Сертификаты",
     about: "О нас",
-    terms: "Условия использования",
-    helpCenter: "Центр помощи",
-    affiliates: "Партнёры",
-    footerDesc: "Современная образовательная платформа для специалистов будущего.",
     search: "Поиск...",
     login: "Войти",
     profile: "Профиль",
@@ -332,7 +324,7 @@ export const translations = {
     termsText: "Продолжая, вы соглашаетесь с условиями использования.",
 
     // Footer
-    footerDesc: "Современная платформа обучения. Будущее начинается с нами.",
+    footerDesc: "Современная образовательная платформа для специалистов будущего.",
     privacy: "Политика конфиденциальности",
     terms: "Условия использования",
     helpCenter: "Центр помощи",
@@ -403,10 +395,6 @@ export const translations = {
     tasks: "Tasks",
     certificates: "Certificates",
     about: "About Us",
-    terms: "Terms of Use",
-    helpCenter: "Help Center",
-    affiliates: "Partners",
-    footerDesc: "A modern education platform cultivating the specialists of tomorrow.",
     search: "Search...",
     login: "Login",
     profile: "Profile",
@@ -530,7 +518,7 @@ export const translations = {
     termsText: "By continuing, you agree to LuminaEdu's terms and privacy policies.",
 
     // Footer
-    footerDesc: "Modern learning platform. The future starts with us.",
+    footerDesc: "A modern education platform cultivating the specialists of tomorrow.",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
     helpCenter: "Help Center",

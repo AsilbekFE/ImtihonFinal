@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Link } from '../router/hashRouter';
+import { Link } from 'react-router-dom';
 
 // ===== SVG ICONS =====
 const GmailIcon = () => (

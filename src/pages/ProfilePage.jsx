@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { navigate, Link } from '../router/hashRouter';
+import { useNavigate, Link } from 'react-router-dom';
 
 const ProfilePage = () => {
   const { isLoggedIn, user, updateProfile, logout, t } = useContext(AppContext);
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(user?.name || '');
   const [editSurname, setEditSurname] = useState(user?.surname || '');
