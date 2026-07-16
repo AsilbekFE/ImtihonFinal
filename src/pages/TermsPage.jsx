@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+﻿import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const Section = ({ number, title, children }) => {
@@ -50,7 +50,7 @@ const TermsPage = () => {
         </div>
 
         {/* Intro banner */}
-        <div className="bg-gradient-to-r from-purple-900/30 to-cyan-900/20 border border-purple-500/20 rounded-2xl p-5 mb-8 flex items-start gap-4">
+        <div className="bg-purple-900/30 border border-purple-500/20 rounded-2xl p-5 mb-8 flex items-start gap-4">
           <span className="text-2xl mt-0.5">📋</span>
           <div>
             <p className="text-white font-semibold text-sm mb-1">Muhim eslatma</p>

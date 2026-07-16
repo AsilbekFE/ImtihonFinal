@@ -1,5 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
+﻿import React, { createContext, useState, useEffect } from 'react';
+import { useUser, useAuth } from '@clerk/clerk-react';
 import { translations } from '../data/translations';
+import { getLogoType } from '../components/TechLogo';
 
 const navigate = (path) => { window.location.hash = path; };
 
@@ -12,8 +14,8 @@ const initialCourses = [
     progress: 65,
     lessons: '12/18 darslar',
     status: 'ACTIVE',
-    image: '🎨',
-    color: 'from-purple-600 to-pink-600',
+    logoType: 'design',
+    color: 'bg-purple-600',
   },
   {
     id: 'c2',
@@ -21,8 +23,8 @@ const initialCourses = [
     progress: 100,
     lessons: '24/24 darslar',
     status: 'COMPLETED',
-    image: '🤖',
-    color: 'from-orange-600 to-red-600',
+    logoType: 'ai',
+    color: 'bg-orange-600',
   }
 ];
 
@@ -51,35 +53,42 @@ const initialTestResults = [
   }
 ];
 
+const defaultUser = {
+  name: 'Alisher',
+  surname: 'Navoiy',
+  title: 'Front-end Developer & AI Enthusiast',
+  avatar: '',
+  email: 'alisher@gmail.com',
+  purchasedCourses: initialCourses,
+  testResults: initialTestResults
+};
+
 export const AppProvider = ({ children }) => {
-  // Theme state
+  const { isSignedIn, user: clerkUser } = useUser();
+  const { signOut } = useAuth();
+
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('lumina_theme');
     return saved || 'dark';
   });
 
-  // Language state
   const [lang, setLang] = useState(() => {
     const saved = localStorage.getItem('lumina_lang');
     return saved || 'uz';
   });
 
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const saved = localStorage.getItem('lumina_logged_in');
-    return saved === 'true';
-  });
-
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('lumina_user');
-    return saved ? JSON.parse(saved) : {
-      name: 'Alisher',
-      surname: 'Navoiy',
-      title: 'Front-end Developer & AI Enthusiast',
-      avatar: '',
-      email: 'alisher@gmail.com',
-      purchasedCourses: initialCourses,
-      testResults: initialTestResults
-    };
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {
+        ...defaultUser,
+        ...parsed,
+        purchasedCourses: parsed.purchasedCourses && parsed.purchasedCourses.length > 0 ? parsed.purchasedCourses : defaultUser.purchasedCourses,
+        testResults: parsed.testResults && parsed.testResults.length > 0 ? parsed.testResults : defaultUser.testResults,
+      };
+    }
+    return { ...defaultUser };
   });
 
   const [selectedCourse, setSelectedCourse] = useState({
@@ -89,12 +98,11 @@ export const AppProvider = ({ children }) => {
     price: 1200000,
     discount: 120000,
     image: '💻',
-    color: 'from-purple-600 to-cyan-500'
+    color: 'bg-purple-600'
   });
 
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // Sync theme to DOM
   useEffect(() => {
     localStorage.setItem('lumina_theme', theme);
     const root = document.documentElement;
@@ -107,14 +115,21 @@ export const AppProvider = ({ children }) => {
     }
   }, [theme]);
 
-  // Sync language to local storage
   useEffect(() => {
     localStorage.setItem('lumina_lang', lang);
   }, [lang]);
 
   useEffect(() => {
-    localStorage.setItem('lumina_logged_in', isLoggedIn);
-  }, [isLoggedIn]);
+    if (clerkUser) {
+      setUser(prev => ({
+        ...prev,
+        name: clerkUser.firstName || prev.name,
+        surname: clerkUser.lastName || prev.surname,
+        email: clerkUser.emailAddresses?.[0]?.emailAddress || prev.email,
+        avatar: clerkUser.imageUrl || prev.avatar,
+      }));
+    }
+  }, [clerkUser]);
 
   useEffect(() => {
     localStorage.setItem('lumina_user', JSON.stringify(user));
@@ -130,36 +145,14 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Translation helper function
   const t = (key) => {
     const textDict = translations[lang] || translations['uz'];
     return textDict[key] || translations['uz'][key] || key;
   };
 
-  const login = (email, password) => {
-    setIsLoggedIn(true);
-    setUser(prev => ({
-      ...prev,
-      email: email || 'user@example.com',
-    }));
-    navigate('/');
-  };
-
-  const register = (email, name, surname) => {
-    setIsLoggedIn(true);
-    setUser(prev => ({
-      ...prev,
-      email: email || 'user@example.com',
-      name: name || 'Foydalanuvchi',
-      surname: surname || '',
-    }));
-    navigate('/');
-  };
-
   const logout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem('lumina_logged_in');
-    navigate('/login');
+    signOut();
+    navigate('/');
   };
 
   const updateProfile = (name, surname, avatar) => {
@@ -172,7 +165,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const handleBuyCourse = (course) => {
-    if (!isLoggedIn) {
+    if (!isSignedIn) {
       setShowAuthModal(true);
     } else {
       setSelectedCourse({
@@ -181,8 +174,8 @@ export const AppProvider = ({ children }) => {
         category: course.category || 'Professional Kurs',
         price: course.priceVal || 1200000,
         discount: course.discountVal || 120000,
-        image: course.icon || '💻',
-        color: course.color || 'from-purple-600 to-cyan-500'
+        logoType: getLogoType(course.title, '', course.category),
+        color: course.color || 'bg-purple-600'
       });
       navigate('/payment');
     }
@@ -203,8 +196,8 @@ export const AppProvider = ({ children }) => {
             progress: 0,
             lessons: '0/24 darslar',
             status: 'ACTIVE',
-            image: courseInfo.image || '💻',
-            color: courseInfo.color || 'from-purple-600 to-cyan-500'
+            logoType: courseInfo.logoType || getLogoType(courseInfo.title, '', courseInfo.category),
+            color: courseInfo.color || 'bg-purple-600'
           }
         ]
       };
@@ -237,7 +230,7 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
-      isLoggedIn,
+      isLoggedIn: isSignedIn,
       user,
       selectedCourse,
       showAuthModal,
@@ -247,8 +240,6 @@ export const AppProvider = ({ children }) => {
       lang,
       changeLang,
       t,
-      login,
-      register,
       logout,
       updateProfile,
       buyCourse: handleBuyCourse,

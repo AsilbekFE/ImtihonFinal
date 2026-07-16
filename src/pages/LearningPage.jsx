@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+﻿import React, { useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import reactCourseCard from '../assets/react_course_card.png';
+import TechLogo from '../components/TechLogo';
 
 const allCourses = [
   {
@@ -12,7 +12,8 @@ const allCourses = [
     students: '1.2k',
     rating: 4.8,
     price: '499,000 UZS',
-    imageSrc: reactCourseCard
+    logoType: 'react',
+    color: 'bg-cyan-600',
   },
   {
     id: 2,
@@ -23,8 +24,8 @@ const allCourses = [
     students: '850',
     rating: 4.5,
     price: '550,000 UZS',
-    color: 'from-green-600 to-emerald-700',
-    icon: '🖥️',
+    color: 'bg-green-600',
+    logoType: 'nodejs',
   },
   {
     id: 3,
@@ -35,8 +36,8 @@ const allCourses = [
     students: '2.4k',
     rating: 5.0,
     price: '399,000 UZS',
-    color: 'from-yellow-500 to-orange-600',
-    icon: '🟨',
+    color: 'bg-yellow-500',
+    logoType: 'javascript',
   },
   {
     id: 4,
@@ -47,8 +48,8 @@ const allCourses = [
     students: '980',
     rating: 4.7,
     price: '480,000 UZS',
-    color: 'from-blue-600 to-indigo-700',
-    icon: '🐍',
+    color: 'bg-blue-600',
+    logoType: 'python',
   },
   {
     id: 5,
@@ -59,8 +60,8 @@ const allCourses = [
     students: '1.8k',
     rating: 4.9,
     price: '450,000 UZS',
-    color: 'from-purple-600 to-pink-700',
-    icon: '🎨',
+    color: 'bg-purple-600',
+    logoType: 'design',
   },
   {
     id: 6,
@@ -71,8 +72,8 @@ const allCourses = [
     students: '650',
     rating: 4.6,
     price: '320,000 UZS',
-    color: 'from-teal-600 to-cyan-700',
-    icon: '🗄️',
+    color: 'bg-teal-600',
+    logoType: 'database',
   },
 ];
 
@@ -136,8 +137,8 @@ const LearningPage = () => {
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                       style={{ backgroundImage: `url(https://img.youtube.com/vi/${activeVideo.id}/hqdefault.jpg)` }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-blue-900/50 mix-blend-multiply" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#07070F] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-purple-900/50 mix-blend-multiply" />
+                    <div className="absolute inset-0 bg-[#07070F]/60" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <button 
                         onClick={() => setIsPlaying(true)}
@@ -283,8 +284,8 @@ const LearningPage = () => {
                         className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300" 
                       />
                     ) : (
-                      <div className={`w-full h-full bg-gradient-to-br ${course.color} flex items-center justify-center`}>
-                        <span className="text-5xl">{course.icon}</span>
+                      <div className={`w-full h-full ${course.color} flex items-center justify-center`}>
+                        <TechLogo type={course.logoType || 'design'} size="w-12 h-12" className="text-white" />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/20" />
@@ -327,10 +328,10 @@ const LearningPage = () => {
                           category: course.category,
                           priceVal: parseInt(course.price.replace(/[^0-9]/g, '')),
                           discountVal: Math.round(parseInt(course.price.replace(/[^0-9]/g, '')) * 0.1),
-                          icon: course.icon,
+                          logoType: course.logoType,
                           color: course.color
                         })}
-                        className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white text-xs font-semibold hover:from-purple-500 hover:to-purple-600 transition-all"
+                        className="px-3 py-1.5 rounded-lg bg-purple-600 text-white text-xs font-semibold transition-all"
                       >
                         {t('buy')}
                       </button>

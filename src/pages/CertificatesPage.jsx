@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useState, useContext } from 'react';
+import { Link } from '../router/hashRouter';
 import { AppContext } from '../context/AppContext';
 
 const CertificatesPage = () => {
@@ -204,7 +204,7 @@ const CertificatesPage = () => {
             <div className="flex justify-center">
               <Link
                 to="/test"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-500 hover:to-purple-600 transition-all glow-purple"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold transition-all glow-purple"
               >
                 📝 {getLabel('takeTest')}
               </Link>
@@ -241,7 +241,7 @@ const CertificatesPage = () => {
             <div className="p-6 md:p-12 overflow-x-auto flex justify-center bg-[#07070F]">
               <div 
                 id="printable-cert-area" 
-                className="w-[800px] h-[560px] bg-gradient-to-br from-[#FAF7EE] via-[#FFFDF6] to-[#F3ECD8] text-slate-800 p-8 border-[12px] border-double border-yellow-700 rounded-lg relative flex flex-col justify-between shadow-2xl flex-shrink-0"
+                className="w-[800px] h-[560px] bg-[#FAF7EE] text-slate-800 p-8 border-[12px] border-double border-yellow-700 rounded-lg relative flex flex-col justify-between shadow-2xl flex-shrink-0"
                 style={{ fontFamily: "'Georgia', serif" }}
               >
                 {/* Vintage Corner Ornaments */}

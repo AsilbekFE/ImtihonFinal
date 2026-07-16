@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Link } from 'react-router-dom';
+import { Link } from '../router/hashRouter';
 
 const partners = [
   {
     category: 'Texnologiya Hamkorlari',
     icon: '💻',
-    gradient: 'from-purple-600/20 to-blue-600/20',
+    gradient: 'bg-purple-600/20',
     border: 'border-purple-500/20',
     items: [
       { name: 'Google for Developers', emoji: '🌐', desc: 'Web texnologiyalari va Cloud xizmatlari bo\'yicha kurs materiallari hamkor.' },
@@ -17,7 +17,7 @@ const partners = [
   {
     category: 'Ta\'lim Tashkilotlari',
     icon: '🎓',
-    gradient: 'from-cyan-600/20 to-teal-600/20',
+    gradient: 'bg-cyan-600/20',
     border: 'border-cyan-500/20',
     items: [
       { name: 'INHA University', emoji: '🏛️', desc: 'IT fakulteti talabalari uchun qo\'shimcha o\'quv manba hamkori.' },
@@ -28,7 +28,7 @@ const partners = [
   {
     category: 'Media va Jamoat',
     icon: '📡',
-    gradient: 'from-green-600/20 to-emerald-600/20',
+    gradient: 'bg-green-600/20',
     border: 'border-green-500/20',
     items: [
       { name: 'IT Press UZ', emoji: '📰', desc: 'IT yangiliklarini tarqatish va platforma reklamasi hamkori.' },
@@ -77,7 +77,7 @@ const PartnersPage = () => {
           <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
             <a
               href="mailto:damiovanvar475@gmail.com?subject=Hamkorlik+arizasi"
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-purple-600/20"
+              className="px-6 py-3 rounded-xl bg-purple-600 text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-purple-600/20"
             >
               🤝 Hamkor bo'ling
             </a>
@@ -123,7 +123,7 @@ const PartnersPage = () => {
                   {cat.items.map(p => (
                     <div
                       key={p.name}
-                      className={`bg-gradient-to-br ${cat.gradient} border ${cat.border} rounded-2xl p-5 hover:scale-[1.02] transition-all duration-200`}
+                      className={`${cat.gradient} border ${cat.border} rounded-2xl p-5 hover:scale-[1.02] transition-all duration-200`}
                     >
                       <div className="flex items-center gap-3 mb-3">
                         <span className="text-2xl">{p.emoji}</span>
@@ -165,7 +165,7 @@ const PartnersPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {steps.map(s => (
               <div key={s.num} className="text-center relative">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-cyan-500 text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-600/30">
+                <div className="w-12 h-12 rounded-full bg-purple-600 text-white font-black text-lg flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-600/30">
                   {s.num}
                 </div>
                 <h4 className="text-white font-bold text-sm mb-2">{s.title}</h4>
@@ -176,7 +176,7 @@ const PartnersPage = () => {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-br from-purple-900/40 to-cyan-900/30 border border-purple-500/20 rounded-3xl p-10 text-center">
+        <div className="bg-purple-900/40 border border-purple-500/20 rounded-3xl p-10 text-center">
           <h2 className="text-3xl font-black text-white mb-4">
             Tayyor ekansiz? 🚀
           </h2>
@@ -187,7 +187,7 @@ const PartnersPage = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="mailto:damiovanvar475@gmail.com?subject=Hamkorlik+arizasi"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-purple-600/20"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-purple-600 text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-purple-600/20"
             >
               📧 Ariza yuborish
             </a>

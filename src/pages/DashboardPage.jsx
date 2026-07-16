@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useContext } from 'react';
+import { Link } from '../router/hashRouter';
 import { AppContext } from '../context/AppContext';
 
 const DashboardPage = () => {
@@ -13,10 +13,10 @@ const DashboardPage = () => {
     : 0;
 
   const stats = [
-    { label: "Kurslar", value: totalCourses, icon: '📚', color: 'from-purple-600 to-purple-800' },
-    { label: "Tugallangan", value: completedCourses, icon: '✅', color: 'from-cyan-600 to-cyan-800' },
-    { label: "Testlar", value: testResults.length, icon: '📝', color: 'from-orange-600 to-orange-800' },
-    { label: "O'rtacha ball", value: avgScore + '%', icon: '⭐', color: 'from-green-600 to-green-800' },
+    { label: "Kurslar", value: totalCourses, icon: '📚', color: 'bg-purple-600' },
+    { label: "Tugallangan", value: completedCourses, icon: '✅', color: 'bg-cyan-600' },
+    { label: "Testlar", value: testResults.length, icon: '📝', color: 'bg-orange-600' },
+    { label: "O'rtacha ball", value: avgScore + '%', icon: '⭐', color: 'bg-green-600' },
   ];
 
   return (
@@ -37,7 +37,7 @@ const DashboardPage = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {stats.map((stat, i) => (
             <div key={i} className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl p-5 flex flex-col gap-3">
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl`}>
+              <div className={`w-12 h-12 rounded-xl ${stat.color} flex items-center justify-center text-2xl`}>
                 {stat.icon}
               </div>
               <div>
@@ -51,19 +51,19 @@ const DashboardPage = () => {
         {/* Quick Links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { title: "Kurslarim", desc: "Sotib olingan kurslarga o'ting", icon: '📖', to: '/learning', color: 'from-purple-600 to-purple-700' },
-            { title: "Testlar", desc: "Bilimingizni sinab ko'ring", icon: '🧪', to: '/test', color: 'from-cyan-600 to-cyan-700' },
-            { title: "Topshiriqlar", desc: "Kod yozib ko'nikma oshiring", icon: '💻', to: '/tasks', color: 'from-orange-600 to-orange-700' },
-            { title: "Sertifikatlar", desc: "Muvaffaqiyatlaringizni ko'ring", icon: '🏆', to: '/certificates', color: 'from-green-600 to-green-700' },
-            { title: "Profil", desc: "Ma'lumotlaringizni tahrirlang", icon: '👤', to: '/profile', color: 'from-pink-600 to-pink-700' },
-            { title: "To'lov", desc: "Yangi kurs sotib oling", icon: '💳', to: '/learning', color: 'from-indigo-600 to-indigo-700' },
+            { title: "Kurslarim", desc: "Sotib olingan kurslarga o'ting", icon: '📖', to: '/learning', color: 'bg-purple-600' },
+            { title: "Testlar", desc: "Bilimingizni sinab ko'ring", icon: '🧪', to: '/test', color: 'bg-cyan-600' },
+            { title: "Topshiriqlar", desc: "Kod yozib ko'nikma oshiring", icon: '💻', to: '/tasks', color: 'bg-orange-600' },
+            { title: "Sertifikatlar", desc: "Muvaffaqiyatlaringizni ko'ring", icon: '🏆', to: '/certificates', color: 'bg-green-600' },
+            { title: "Profil", desc: "Ma'lumotlaringizni tahrirlang", icon: '👤', to: '/profile', color: 'bg-pink-600' },
+            { title: "To'lov", desc: "Yangi kurs sotib oling", icon: '💳', to: '/learning', color: 'bg-indigo-600' },
           ].map((item) => (
             <Link
               key={item.to + item.title}
               to={item.to}
               className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl p-5 flex items-center gap-4 hover:border-purple-500/50 hover:scale-[1.02] transition-all group cursor-pointer"
             >
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform flex-shrink-0`}>
+              <div className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform flex-shrink-0`}>
                 {item.icon}
               </div>
               <div>

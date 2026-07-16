@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useState, useEffect, useContext } from 'react';
+import { Link } from '../router/hashRouter';
 import { AppContext } from '../context/AppContext';
+import TechLogo from '../components/TechLogo';
 
 const courses = [
   {
@@ -12,8 +13,8 @@ const courses = [
     reviews: '(186)',
     lessons: 24,
     price: '$49.00',
-    color: 'from-purple-600 to-pink-600',
-    icon: '🎨',
+    color: 'bg-purple-600',
+    logoType: 'design',
   },
   {
     id: 2,
@@ -24,8 +25,8 @@ const courses = [
     reviews: '(864)',
     lessons: 36,
     price: '$59.00',
-    color: 'from-cyan-600 to-blue-600',
-    icon: '🐍',
+    color: 'bg-cyan-600',
+    logoType: 'python',
   },
   {
     id: 3,
@@ -36,8 +37,8 @@ const courses = [
     reviews: '(420)',
     lessons: 18,
     price: '$39.00',
-    color: 'from-green-600 to-teal-600',
-    icon: '📈',
+    color: 'bg-green-600',
+    logoType: 'marketing',
   },
   {
     id: 4,
@@ -48,8 +49,8 @@ const courses = [
     reviews: '(390)',
     lessons: 42,
     price: '$49.00',
-    color: 'from-orange-600 to-red-600',
-    icon: '🤖',
+    color: 'bg-orange-600',
+    logoType: 'ai',
   },
 ];
 
@@ -78,17 +79,18 @@ const stats = [
 ];
 
 const mentors = [
-  { id: 1, name: "Azizbek O'qumov", role: "UI/UX Art Director", company: "Google", avatar: "👨‍🎨", color: "from-pink-500 to-purple-600" },
-  { id: 2, name: "Shaxzod Rahimov", role: "Lead Python Developer", company: "Amazon", avatar: "👨‍💻", color: "from-cyan-500 to-blue-600" },
-  { id: 3, name: "Malika Ahmedova", role: "Marketing Strategist", company: "Meta", avatar: "👩‍💼", color: "from-green-500 to-teal-600" },
-  { id: 4, name: "Botir Ziyadov", role: "AI & ML Specialist", company: "OpenAI", avatar: "🤖", color: "from-orange-500 to-red-600" },
-  { id: 5, name: "Dilshod Karimov", role: "Senior Full-Stack Engineer", company: "Microsoft", avatar: "👨‍💻", color: "from-purple-500 to-indigo-600" }
+  { id: 1, name: "Azizbek O'qumov", role: "UI/UX Art Director", company: "Google", avatar: "👨‍🎨", color: "bg-pink-500", age: 32, level: "Senior", available: true, bio: "10+ yillik tajribaga ega UI/UX dizayner. Google'ning yetakchi dizayn jamoasida ishlaydi. Figma, Sketch va boshqa dizayn vositalarini professional darajada egallagan." },
+  { id: 2, name: "Shaxzod Rahimov", role: "Lead Python Developer", company: "Amazon", avatar: "👨‍💻", color: "bg-cyan-500", age: 29, level: "Lead", available: false, bio: "Python bo'yicha yetakchi dasturchi. Amazon'da backend arxitekturasini boshqaradi. Django, FastAPI va microservices tizimlarida katta tajriba." },
+  { id: 3, name: "Malika Ahmedova", role: "Marketing Strategist", company: "Meta", avatar: "👩‍💼", color: "bg-green-500", age: 27, level: "Mid-Senior", available: true, bio: "Raqamli marketing va brend strategiyasi bo'yicha mutaxassis. Meta'da katta loyihalarni boshqaradi. SMM, SEO va analytics sohasida expert." },
+  { id: 4, name: "Botir Ziyadov", role: "AI & ML Specialist", company: "OpenAI", avatar: "🤖", color: "bg-orange-500", age: 35, level: "Principal", available: true, bio: "Sun'iy intellekt va machine learning sohasida 12 yillik tajriba. OpenAI'da katta modellarni train qilish bilan shug'ullanadi. PyTorch va TensorFlow ustasi." },
+  { id: 5, name: "Dilshod Karimov", role: "Senior Full-Stack Engineer", company: "Microsoft", avatar: "👨‍💻", color: "bg-purple-500", age: 31, level: "Senior", available: false, bio: "React, Node.js va Azure cloud bo'yicha professional dasturchi. Microsoft'da katta loyihalarni ishlab chiqadi. Full-stack arxitektura va DevOps tajribasi." }
 ];
 
 const HomePage = () => {
   const { buyCourse, t } = useContext(AppContext);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentMentorSlide, setCurrentMentorSlide] = useState(0);
+  const [selectedMentor, setSelectedMentor] = useState(null);
   const [animating, setAnimating] = useState(false);
   const features = getFeatures(t);
 
@@ -150,7 +152,7 @@ const HomePage = () => {
               <div className="flex flex-wrap gap-4">
                 <Link
                   to="/learning"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-500 hover:to-purple-600 transition-all duration-200 glow-purple hover:scale-105"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold transition-all duration-200 glow-purple hover:scale-105"
                 >
                   {t('seeCourses')}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,7 +176,7 @@ const HomePage = () => {
               <div className="relative w-full max-w-md">
                 {/* Floating badge */}
                 <div className="absolute -top-4 -right-4 z-20 bg-[#13132A] border border-purple-500/40 rounded-xl px-3 py-2 flex items-center gap-2 animate-float shadow-xl">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
+                  <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
                     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
@@ -183,9 +185,9 @@ const HomePage = () => {
                 </div>
 
                 {/* Main card */}
-                <div className="bg-gradient-to-br from-[#13132A] to-[#1a1040] border border-purple-500/20 rounded-2xl overflow-hidden shadow-2xl">
-                  <div className={`h-52 bg-gradient-to-br ${courses[currentSlide].color} flex items-center justify-center relative`}>
-                    <span className="text-7xl">{courses[currentSlide].icon}</span>
+                <div className="bg-[#13132A] border border-purple-500/20 rounded-2xl overflow-hidden shadow-2xl">
+                  <div className={`h-52 ${courses[currentSlide].color} flex items-center justify-center relative`}>
+                    <TechLogo type={courses[currentSlide].logoType} size="w-16 h-16" className="text-white" />
                     <div className="absolute inset-0 bg-black/20" />
                     <div className="absolute bottom-3 left-3 right-3 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2">
                       <div className="text-white/70 text-xs">{t('ongoing')}</div>
@@ -217,10 +219,10 @@ const HomePage = () => {
                           category: courses[currentSlide].category,
                           priceVal: courses[currentSlide].price === '$49.00' ? 490000 : 590000,
                           discountVal: 49000,
-                          icon: courses[currentSlide].icon,
+                          logoType: courses[currentSlide].logoType,
                           color: courses[currentSlide].color
                         })}
-                        className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm font-semibold hover:from-purple-500 hover:to-purple-600 transition-all"
+                        className="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-semibold transition-all"
                       >
                         {t('buy')}
                       </button>
@@ -325,8 +327,8 @@ const HomePage = () => {
                 data-aos-delay={idx * 100}
                 className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl overflow-hidden hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
               >
-                <div className={`h-40 bg-gradient-to-br ${course.color} relative flex items-center justify-center`}>
-                  <span className="text-5xl">{course.icon}</span>
+                <div className={`h-40 ${course.color} relative flex items-center justify-center`}>
+                  <TechLogo type={course.logoType} size="w-12 h-12" className="text-white" />
                   <div className="absolute inset-0 bg-black/20" />
                   <div className="absolute top-2 left-2 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded-full font-semibold">
                     {course.category}
@@ -361,7 +363,7 @@ const HomePage = () => {
                         category: course.category,
                         priceVal: course.price === '$49.00' ? 490000 : course.price === '$59.00' ? 590000 : 390000,
                         discountVal: 39000,
-                        icon: course.icon,
+                        logoType: course.logoType,
                         color: course.color
                       })}
                       className="px-3 py-1.5 rounded-lg bg-purple-600/20 text-purple-400 text-xs font-semibold hover:bg-purple-600 hover:text-white transition-all border border-purple-500/30"
@@ -377,7 +379,7 @@ const HomePage = () => {
       </section>
 
       {/* ===== MENTORS SLIDER SECTION ===== */}
-      <section className="py-20 bg-[#07070F]/50 border-t border-[#1E1E3A]">
+      <section className="py-20 bg-[#07070F]/50 border-t border-[#1E1E3A] mentors-dark-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
             <div data-aos="fade-right">
@@ -422,13 +424,14 @@ const HomePage = () => {
                 return (
                   <div
                     key={mentor.id}
+                    onClick={() => isActive && setSelectedMentor(mentor)}
                     className={`transition-all duration-500 rounded-3xl p-6 border flex flex-col sm:flex-row items-center gap-6 shadow-xl ${
                       isActive
-                        ? 'bg-[#13132A] border-purple-500/30 scale-100 opacity-100 w-full max-w-xl z-10'
+                        ? 'bg-[#13132A] border-purple-500/30 scale-100 opacity-100 w-full max-w-xl z-10 cursor-pointer hover:border-purple-500/60'
                         : 'bg-[#13132A]/40 border-[#1E1E3A] scale-90 opacity-40 hidden md:flex w-72'
                     }`}
                   >
-                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${mentor.color} flex items-center justify-center text-4xl flex-shrink-0 shadow-lg`}>
+                    <div className={`w-20 h-20 rounded-2xl ${mentor.color} flex items-center justify-center text-4xl flex-shrink-0 shadow-lg`}>
                       {mentor.avatar}
                     </div>
                     <div className="text-center sm:text-left flex-1 min-w-0">
@@ -466,7 +469,7 @@ const HomePage = () => {
       {/* ===== CTA SECTION ===== */}
       <section className="py-20 bg-[#07070F]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative bg-gradient-to-br from-[#13132A] to-[#1a0533] border border-purple-500/20 rounded-3xl p-12 text-center overflow-hidden">
+          <div className="relative bg-[#13132A] border border-purple-500/20 rounded-3xl p-12 text-center overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
               <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl" />
@@ -484,13 +487,67 @@ const HomePage = () => {
 
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold text-lg hover:from-purple-500 hover:to-purple-600 transition-all glow-purple hover:scale-105"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-purple-600 text-white font-bold text-lg transition-all glow-purple hover:scale-105"
             >
               {t('registerNow')}
             </Link>
           </div>
         </div>
       </section>
+      {/* Mentor Details Modal */}
+      {selectedMentor && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4" onClick={() => setSelectedMentor(null)}>
+          <div className="bg-[#13132A] border border-[#1E1E3A] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setSelectedMentor(null)}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#1E1E3A] flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500/20 transition-all text-sm"
+            >
+              ✕
+            </button>
+
+            <div className="flex items-center gap-4 mb-6">
+              <div className={`w-16 h-16 rounded-2xl ${selectedMentor.color} flex items-center justify-center text-3xl shadow-lg`}>
+                {selectedMentor.avatar}
+              </div>
+              <div>
+                <h3 className="text-white font-black text-xl">{selectedMentor.name}</h3>
+                <p className="text-gray-400 text-sm">{selectedMentor.role}</p>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-600/15 text-purple-400 border border-purple-500/20 mt-1 inline-block">
+                  {selectedMentor.company}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3 mb-5">
+              <div className="bg-[#0D0D1A] border border-[#1E1E3A] rounded-xl p-3 text-center">
+                <div className="text-lg font-black text-white">{selectedMentor.age}</div>
+                <div className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Yosh</div>
+              </div>
+              <div className="bg-[#0D0D1A] border border-[#1E1E3A] rounded-xl p-3 text-center">
+                <div className="text-lg font-black text-purple-400">{selectedMentor.level}</div>
+                <div className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Daraja</div>
+              </div>
+              <div className={`bg-[#0D0D1A] border rounded-xl p-3 text-center ${selectedMentor.available ? 'border-green-500/30' : 'border-red-500/30'}`}>
+                <div className={`text-lg font-black ${selectedMentor.available ? 'text-green-400' : 'text-red-400'}`}>
+                  {selectedMentor.available ? 'Bo\'sh' : 'Band'}
+                </div>
+                <div className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Holat</div>
+              </div>
+            </div>
+
+            <div className="bg-[#0D0D1A] border border-[#1E1E3A] rounded-xl p-4 mb-4">
+              <p className="text-gray-400 text-sm leading-relaxed">{selectedMentor.bio}</p>
+            </div>
+
+            <button
+              onClick={() => setSelectedMentor(null)}
+              className="w-full py-3 rounded-xl bg-purple-600 text-white font-bold text-sm hover:bg-purple-500 transition-all"
+            >
+              Yopish
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

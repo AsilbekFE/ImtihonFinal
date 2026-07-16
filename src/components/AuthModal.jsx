@@ -1,22 +1,18 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AuthModal = () => {
   const { showAuthModal, setShowAuthModal, t } = useContext(AppContext);
-  const navigate = useNavigate();
 
   if (!showAuthModal) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => setShowAuthModal(false)}
       />
 
-      {/* Modal Content */}
       <div className="relative w-full max-w-md bg-[#13132A] border border-purple-500/30 rounded-3xl p-6 text-center shadow-2xl animate-float">
         <button 
           onClick={() => setShowAuthModal(false)}
@@ -27,8 +23,7 @@ const AuthModal = () => {
           </svg>
         </button>
 
-        {/* Icon */}
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center mx-auto mb-4 text-2xl">
+        <div className="w-16 h-16 rounded-2xl bg-purple-500 flex items-center justify-center mx-auto mb-4 text-2xl">
           🔒
         </div>
 
@@ -38,15 +33,13 @@ const AuthModal = () => {
         </p>
 
         <div className="flex flex-col gap-3">
-          <button
-            onClick={() => {
-              setShowAuthModal(false);
-              navigate('/login');
-            }}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold text-sm hover:from-purple-500 hover:to-purple-600 transition-all glow-purple"
+          <a
+            href="#/login"
+            onClick={() => setShowAuthModal(false)}
+            className="w-full py-3 rounded-xl bg-purple-600 text-white font-semibold text-sm transition-all glow-purple text-center"
           >
             {t('authModalBtn')}
-          </button>
+          </a>
           
           <button
             onClick={() => setShowAuthModal(false)}

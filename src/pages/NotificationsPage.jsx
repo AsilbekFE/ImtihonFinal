@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useState, useContext } from 'react';
+import { Link } from '../router/hashRouter';
 import { AppContext } from '../context/AppContext';
 
 const initialNotifications = [
@@ -23,7 +23,7 @@ const initialNotifications = [
       en: 'Just now'
     },
     read: false,
-    color: 'from-purple-600 to-indigo-600'
+    color: 'bg-purple-600'
   },
   {
     id: 2,
@@ -45,7 +45,7 @@ const initialNotifications = [
       en: '2 hours ago'
     },
     read: false,
-    color: 'from-yellow-500 to-amber-600'
+    color: 'bg-yellow-500'
   },
   {
     id: 3,
@@ -67,7 +67,7 @@ const initialNotifications = [
       en: 'Yesterday, 18:30'
     },
     read: true,
-    color: 'from-green-500 to-emerald-600'
+    color: 'bg-green-500'
   },
   {
     id: 4,
@@ -89,7 +89,7 @@ const initialNotifications = [
       en: '3 days ago'
     },
     read: true,
-    color: 'from-blue-600 to-cyan-600'
+    color: 'bg-blue-600'
   }
 ];
 
@@ -239,7 +239,7 @@ const NotificationsPage = () => {
                 }`}
               >
                 {/* Icon wrapper */}
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${notif.color} flex items-center justify-center text-xl shadow-md flex-shrink-0`}>
+                <div className={`w-11 h-11 rounded-xl ${notif.color} flex items-center justify-center text-xl shadow-md flex-shrink-0`}>
                   {notif.icon}
                 </div>
 
@@ -286,7 +286,7 @@ const NotificationsPage = () => {
             </p>
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-500 hover:to-purple-600 transition-all duration-200 glow-purple"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold transition-all duration-200 glow-purple"
             >
               📚 {t('explore')}
             </Link>

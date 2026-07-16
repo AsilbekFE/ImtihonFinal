@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+﻿import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const faqs = [
@@ -189,7 +189,7 @@ const HelpCenterPage = () => {
         )}
 
         {/* Contact Section */}
-        <div className="mt-10 bg-gradient-to-br from-[#13132A] to-[#0D0D1A] border border-[#1E1E3A] rounded-3xl p-8">
+        <div className="mt-10 bg-#13132A border border-[#1E1E3A] rounded-3xl p-8">
           <h2 className="text-white font-bold text-xl text-center mb-2">Hali ham yordam kerakmi?</h2>
           <p className="text-gray-500 text-sm text-center mb-8">Ushbu kanallar orqali biz bilan bog'laning:</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

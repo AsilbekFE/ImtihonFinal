@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+﻿import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Link, useLocation, useNavigate } from '../router/hashRouter';
+import { SignedIn, SignedOut, useUser, useAuth } from '@clerk/clerk-react';
 import { AppContext } from '../context/AppContext';
 
 const searchItems = [
@@ -21,16 +22,32 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
-  const { 
-    isLoggedIn, 
-    user, 
-    setShowAuthModal, 
-    theme, 
-    toggleTheme, 
-    lang, 
-    changeLang, 
-    t 
+  const {
+    isLoggedIn,
+    setShowAuthModal,
+    theme,
+    toggleTheme,
+    lang,
+    changeLang,
+    t,
+    logout
   } = useContext(AppContext);
+
+  const { user: clerkUser } = useUser();
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -66,7 +83,6 @@ const Navbar = () => {
     { translationKey: 'test', path: '/test' },
     { translationKey: 'tasks', path: '/tasks' },
     { translationKey: 'certificates', path: '/certificates' },
-    { translationKey: 'about', path: '/about' },
   ];
 
   const isActive = (path) => pathname === path;
@@ -129,7 +145,6 @@ const Navbar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
 
-              {/* Search results & Loader Dropdown */}
               {(isSearching || searchQuery.trim().length > 0) && (
                 <div className="absolute right-0 top-12 w-64 bg-[#13132A]/95 border border-[#1E1E3A] rounded-xl shadow-2xl overflow-hidden z-50 p-2 backdrop-blur-xl">
                   {isSearching ? (
@@ -171,19 +186,17 @@ const Navbar = () => {
               </select>
             </div>
 
-            {/* Theme Toggle (colorless/ransiz SVG) */}
+            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
               className="w-9 h-9 rounded-lg bg-[#13132A] border border-[#1E1E3A] flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/50 transition-all"
             >
               {theme === 'dark' ? (
-                // Moon icon (to switch to light)
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
                 </svg>
               ) : (
-                // Sun icon (to switch to dark)
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
@@ -208,31 +221,56 @@ const Navbar = () => {
             </Link>
 
             {/* Login / Profile logic */}
-            {!isLoggedIn ? (
+            <SignedOut>
               <Link
                 to="/login"
                 className="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white border border-[#1E1E3A] hover:border-purple-500/50 bg-[#13132A] transition-all"
               >
                 {t('login')}
               </Link>
-            ) : (
-              <Link
-                to="/profile"
-                className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center text-white font-bold text-sm hover:scale-110 transition-transform"
-                style={{ boxShadow: '0 0 15px rgba(124,58,237,0.4)' }}
-              >
-                {user.avatar ? (
-                  <img src={user.avatar} alt="Avatar" className="w-full h-full rounded-full object-cover" />
-                ) : (
-                  user.name.charAt(0)
+            </SignedOut>
+            <SignedIn>
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="w-9 h-9 rounded-full overflow-hidden border-2 border-purple-500/30 hover:border-purple-500 transition-all"
+                >
+                  {clerkUser?.imageUrl ? (
+                    <img src={clerkUser.imageUrl} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                      {(clerkUser?.firstName || 'U').charAt(0)}
+                    </div>
+                  )}
+                </button>
+                {profileOpen && (
+                  <div className="absolute right-0 top-12 w-56 bg-[#13132A] border border-[#1E1E3A] rounded-xl shadow-2xl overflow-hidden z-50">
+                    <div className="p-3 border-b border-[#1E1E3A]">
+                      <p className="text-white text-sm font-bold truncate">{clerkUser?.firstName} {clerkUser?.lastName}</p>
+                      <p className="text-gray-500 text-[11px] truncate">{clerkUser?.emailAddresses?.[0]?.emailAddress}</p>
+                    </div>
+                    <div className="p-1.5">
+                      <button
+                        onClick={() => { setProfileOpen(false); navigate('/profile'); }}
+                        className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-purple-600/20 transition-all flex items-center gap-2"
+                      >
+                        <span>👤</span> {t('editProfile')}
+                      </button>
+                      <button
+                        onClick={async () => { setProfileOpen(false); await signOut(); navigate('/'); }}
+                        className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-300 hover:text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-2"
+                      >
+                        <span>🚪</span> {t('settings')}
+                      </button>
+                    </div>
+                  </div>
                 )}
-              </Link>
-            )}
+              </div>
+            </SignedIn>
           </div>
 
           {/* Mobile controls & toggle button */}
           <div className="flex items-center gap-2 lg:hidden">
-            {/* Small theme toggle */}
             <button
               onClick={toggleTheme}
               className="w-8 h-8 rounded-lg bg-[#13132A] border border-[#1E1E3A] flex items-center justify-center text-gray-400"
@@ -240,7 +278,6 @@ const Navbar = () => {
               {theme === 'dark' ? '☀️' : '🌙'}
             </button>
 
-            {/* Small lang selector */}
             <select
               value={lang}
               onChange={(e) => changeLang(e.target.value)}
@@ -292,34 +329,38 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="flex gap-2 mt-3">
-            {!isLoggedIn ? (
-              <>
-                <Link
-                  to="/login"
-                  onClick={() => setMobileOpen(false)}
+            <SignedOut>
+              <Link
+                to="/login"
+                onClick={() => setMobileOpen(false)}
+                className="flex-1 text-center px-4 py-2 rounded-lg text-sm border border-[#1E1E3A] text-gray-300 bg-[#13132A]"
+              >
+                {t('login')}
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => setMobileOpen(false)}
+                className="flex-1 text-center px-4 py-2 rounded-lg text-sm bg-purple-600 text-white font-semibold"
+              >
+                {t('registerNow')}
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <div className="flex-1 flex gap-2">
+                <button
+                  onClick={() => { setMobileOpen(false); navigate('/profile'); }}
                   className="flex-1 text-center px-4 py-2 rounded-lg text-sm border border-[#1E1E3A] text-gray-300 bg-[#13132A]"
                 >
-                  {t('login')}
-                </Link>
-                <button
-                  onClick={() => {
-                    setMobileOpen(false);
-                    setShowAuthModal(true);
-                  }}
-                  className="flex-1 text-center px-4 py-2 rounded-lg text-sm bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold"
-                >
-                  {t('registerNow')}
+                  👤 {t('editProfile')}
                 </button>
-              </>
-            ) : (
-              <Link
-                to="/profile"
-                onClick={() => setMobileOpen(false)}
-                className="w-full text-center px-4 py-2.5 rounded-xl border border-purple-500/30 text-purple-400 bg-purple-600/10 font-semibold"
-              >
-                {t('profile')} ({user.name})
-              </Link>
-            )}
+                <button
+                  onClick={async () => { setMobileOpen(false); await signOut(); navigate('/'); }}
+                  className="flex-1 text-center px-4 py-2 rounded-lg text-sm bg-red-600/20 text-red-400 border border-red-500/30"
+                >
+                  🚪 {t('settings')}
+                </button>
+              </div>
+            </SignedIn>
           </div>
         </div>
       )}

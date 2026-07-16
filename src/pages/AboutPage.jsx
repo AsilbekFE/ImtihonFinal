@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+﻿import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Link } from 'react-router-dom';
+import { Link } from '../router/hashRouter';
 
 // ===== SVG ICONS =====
 const GmailIcon = () => (
@@ -136,7 +136,7 @@ const AboutPage = () => {
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/learning"
-            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-600/20 text-sm"
+            className="px-6 py-3 bg-purple-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-600/20 text-sm"
           >
             Kurslarni Ko'rish →
           </Link>
@@ -158,7 +158,7 @@ const AboutPage = () => {
 
       {/* ===== MISSION SECTION ===== */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="bg-gradient-to-br from-[#13132A] to-[#0D0D1A] border border-purple-500/15 rounded-3xl p-8 sm:p-12">
+        <div className="bg-#13132A border border-purple-500/15 rounded-3xl p-8 sm:p-12">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div>
               <span className="text-xs font-bold tracking-widest text-cyan-400 uppercase">Bizning Missiya</span>

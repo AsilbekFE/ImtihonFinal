@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react';
+﻿import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Link } from 'react-router-dom';
+import { Link } from '../router/hashRouter';
 import { navigate } from '../router/hashRouter';
+import TechLogo from '../components/TechLogo';
 
 const PaymentPage = () => {
   const { selectedCourse, addPurchasedCourse, user, t } = useContext(AppContext);
@@ -89,7 +90,7 @@ const PaymentPage = () => {
     setPaymentSuccess(true);
     addPurchasedCourse({
       title: selectedCourse.title,
-      image: selectedCourse.image,
+      logoType: selectedCourse.logoType,
       color: selectedCourse.color
     });
     setTimeout(() => {
@@ -193,7 +194,7 @@ const PaymentPage = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-4 mt-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:opacity-90 transition-opacity text-white font-bold text-base flex items-center justify-center gap-2 glow-purple"
+                  className="w-full py-4 mt-2 rounded-xl bg-purple-600 hover:opacity-90 transition-opacity text-white font-bold text-base flex items-center justify-center gap-2 glow-purple"
                 >
                   {t('confirmPay')}
                   <span>🔒</span>
@@ -213,8 +214,8 @@ const PaymentPage = () => {
 
                 {/* Course Card Preview */}
                 <div className="flex items-center gap-4 bg-[#0D0D1A] border border-[#1E1E3A] rounded-2xl p-4 mb-6">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${selectedCourse.color || 'from-purple-600 to-cyan-500'} flex items-center justify-center text-2xl flex-shrink-0`}>
-                    {selectedCourse.image || '💻'}
+                  <div className={`w-14 h-14 rounded-xl ${selectedCourse.color || 'bg-purple-600'} flex items-center justify-center flex-shrink-0`}>
+                    <TechLogo type={selectedCourse.logoType || 'design'} size="w-7 h-7" className="text-white" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-purple-400 text-xs font-semibold">{selectedCourse.category || 'Professional Kurs'}</span>

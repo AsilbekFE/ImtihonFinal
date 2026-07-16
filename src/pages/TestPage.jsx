@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+﻿import React, { useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import {
   frontendQuestions,
@@ -6,13 +6,14 @@ import {
   reactQuestions,
   javascriptQuestions,
 } from '../data/questionsData';
+import TechLogo from '../components/TechLogo';
 
 const categories = [
   {
     id: 'frontend',
     name: 'Frontend',
-    icon: '🖥️',
-    color: 'from-blue-600 to-cyan-600',
+    logoType: 'html',
+    color: 'bg-blue-600',
     borderColor: 'border-blue-500/40',
     bgColor: 'bg-blue-600/10',
     textColor: 'text-blue-400',
@@ -22,8 +23,8 @@ const categories = [
   {
     id: 'backend',
     name: 'Backend',
-    icon: '⚙️',
-    color: 'from-green-600 to-emerald-600',
+    logoType: 'nodejs',
+    color: 'bg-green-600',
     borderColor: 'border-green-500/40',
     bgColor: 'bg-green-600/10',
     textColor: 'text-green-400',
@@ -33,8 +34,8 @@ const categories = [
   {
     id: 'react',
     name: 'React.js',
-    icon: '⚛️',
-    color: 'from-cyan-600 to-blue-700',
+    logoType: 'react',
+    color: 'bg-cyan-600',
     borderColor: 'border-cyan-500/40',
     bgColor: 'bg-cyan-600/10',
     textColor: 'text-cyan-400',
@@ -44,8 +45,8 @@ const categories = [
   {
     id: 'javascript',
     name: 'JavaScript',
-    icon: '🟨',
-    color: 'from-yellow-500 to-orange-600',
+    logoType: 'javascript',
+    color: 'bg-yellow-500',
     borderColor: 'border-yellow-500/40',
     bgColor: 'bg-yellow-600/10',
     textColor: 'text-yellow-400',
@@ -173,7 +174,7 @@ const ResultScreen = ({ category, answers, questions, onRetry, onBack }) => {
             </button>
             <button
               onClick={onRetry}
-              className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-500 hover:to-purple-600 transition-all glow-purple"
+              className="flex-1 px-4 py-3 rounded-xl bg-purple-600 text-white font-semibold transition-all glow-purple"
             >
               {t('retryBtn')} 🔄
             </button>
@@ -230,7 +231,7 @@ const QuizScreen = ({ category, onFinish, onBack }) => {
         {/* Header */}
         <div className="text-center mb-8 fade-up">
           <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-3 ${category.bgColor} border ${category.borderColor} ${category.textColor}`}>
-            <span>{category.icon}</span>
+            <TechLogo type={category.logoType || 'design'} size="w-4 h-4" />
             {category.name.toUpperCase()} ASSESSMENT
           </div>
           <h1 className="text-2xl font-black text-white">{t('quizHeader')}</h1>
@@ -241,7 +242,7 @@ const QuizScreen = ({ category, onFinish, onBack }) => {
           {/* Progress bar */}
           <div className="mt-4 bg-[#1E1E3A] rounded-full h-1.5 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-purple-600 to-cyan-500 rounded-full transition-all duration-500"
+              className="h-full bg-purple-600 rounded-full transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -316,8 +317,8 @@ const QuizScreen = ({ category, onFinish, onBack }) => {
               className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all ${
                 selectedOption !== null
                   ? isLast
-                    ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-500 hover:to-emerald-500 glow-cyan'
-                    : 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-500 hover:to-purple-600 glow-purple'
+                    ? 'bg-green-600 text-white glow-cyan'
+                    : 'bg-purple-600 text-white glow-purple'
                   : 'bg-[#1E1E3A] text-gray-600 cursor-not-allowed'
               }`}
             >
@@ -467,8 +468,8 @@ const TestPage = () => {
             >
               {/* Card header */}
               <div className="flex items-center justify-between mb-4">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform`}>
-                  {cat.icon}
+                <div className={`w-14 h-14 rounded-2xl ${cat.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+                  <TechLogo type={cat.logoType || 'design'} size="w-8 h-8" className="text-white" />
                 </div>
                 <div className={`px-3 py-1 rounded-full text-xs font-semibold ${cat.bgColor} ${cat.textColor} border ${cat.borderColor}`}>
                   {t('questionsLimit')}
@@ -491,7 +492,7 @@ const TestPage = () => {
               </div>
 
               {/* Start button */}
-              <div className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r ${cat.color} text-white font-semibold text-sm group-hover:opacity-90 transition-opacity`}>
+              <div className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl ${cat.color} text-white font-semibold text-sm group-hover:opacity-90 transition-opacity`}>
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>

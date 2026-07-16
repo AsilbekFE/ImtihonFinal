@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+﻿import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { AppContext } from '../context/AppContext';
 import { tasksData } from '../data/tasksData';
 
@@ -587,7 +587,7 @@ const TasksPage = () => {
                         <p className="text-gray-400 text-xs mt-1">Ushbu topshiriq muvaffaqiyatli yakunlandi.</p>
                         <button
                           onClick={handleNextTask}
-                          className="mt-3 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-xs font-bold rounded-lg transition-all"
+                          className="mt-3 px-4 py-2 bg-green-500 text-white text-xs font-bold rounded-lg transition-all"
                         >
                           Keyingi topshiriq ➔
                         </button>
@@ -605,7 +605,7 @@ const TasksPage = () => {
                 {/* Big Validate Button */}
                 <button
                   onClick={handleRunValidation}
-                  className="mt-6 w-full py-3.5 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-extrabold rounded-xl shadow-lg shadow-purple-600/20 hover:shadow-purple-600/35 transition-all text-sm flex items-center justify-center gap-2 group"
+                  className="mt-6 w-full py-3.5 bg-purple-600 text-white font-extrabold rounded-xl shadow-lg shadow-purple-600/20 hover:shadow-purple-600/35 transition-all text-sm flex items-center justify-center gap-2 group"
                 >
                   <span>🚀</span> Kodni tekshirish
                 </button>
@@ -613,7 +613,7 @@ const TasksPage = () => {
             </div>
 
             {/* RIGHT SIDE: IDE (Live preview top, editor bottom) */}
-            <div className="lg:col-span-7 flex flex-col gap-4">
+            <div className="lg:col-span-7 flex flex-col gap-4 dark-editor">
               
               {/* LIVE OUTPUT PREVIEW */}
               <div className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl overflow-hidden flex flex-col h-[260px] shadow-lg">

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+﻿import React from 'react';
+import { Link } from '../router/hashRouter';
 
 const NotFoundPage = () => {
   return (
@@ -25,7 +25,7 @@ const NotFoundPage = () => {
           to="/"
           data-aos="fade-up"
           data-aos-delay="300"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-purple-600/20"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-purple-600/20"
         >
           ← Bosh sahifaga qaytish
         </Link>

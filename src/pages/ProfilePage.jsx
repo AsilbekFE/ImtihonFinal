@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+﻿import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from '../router/hashRouter';
+import TechLogo from '../components/TechLogo';
 
 const ProfilePage = () => {
   const { isLoggedIn, user, updateProfile, logout, t } = useContext(AppContext);
@@ -30,7 +31,7 @@ const ProfilePage = () => {
           <div className="space-y-3">
             <button
               onClick={() => navigate('/login')}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-bold text-sm hover:opacity-90 transition-all glow-purple"
+              className="w-full py-3 rounded-xl bg-purple-600 text-white font-bold text-sm hover:opacity-90 transition-all glow-purple"
             >
               {t('login')}
             </button>
@@ -46,6 +47,14 @@ const ProfilePage = () => {
     );
   }
 
+  const handleAvatarFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setEditAvatar(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
   const handleSave = (e) => {
     e.preventDefault();
     updateProfile(editName, editSurname, editAvatar);
@@ -57,23 +66,29 @@ const ProfilePage = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Profile Header Card */}
-        <div className="bg-gradient-to-br from-[#13132A] to-[#1a0c35] border border-purple-500/20 rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+        <div className="bg-[#13132A] border border-purple-500/20 rounded-3xl p-6 sm:p-8 relative overflow-hidden">
           {/* Decorative glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
             {/* Avatar & Name */}
             <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full border-4 border-purple-500/30 overflow-hidden bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center text-white font-black text-4xl shadow-xl">
-                  {editAvatar ? (
-                    <img src={editAvatar} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    user.name.charAt(0)
-                  )}
-                </div>
+              <div className="relative group cursor-pointer">
+                <label className="block">
+                  <div className="w-24 h-24 rounded-full border-4 border-purple-500/30 overflow-hidden bg-purple-600 flex items-center justify-center text-white font-black text-4xl shadow-xl relative">
+                    {user.avatar ? (
+                      <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      user.name.charAt(0)
+                    )}
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">📷</span>
+                    </div>
+                  </div>
+                  <input type="file" accept="image/*" onChange={handleAvatarFile} className="hidden" />
+                </label>
                 {/* Level badge */}
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider border-2 border-[#13132A] shadow-lg flex items-center gap-1">
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyan-500 text-white font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider border-2 border-[#13132A] shadow-lg flex items-center gap-1">
                   <span>★</span> {t('levelBadge')}
                 </div>
               </div>
@@ -144,13 +159,30 @@ const ProfilePage = () => {
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-gray-400 text-xs font-semibold mb-2">{t('avatarLabel')}</label>
-                <input
-                  type="text"
-                  placeholder="https://example.com/avatar.jpg"
-                  value={editAvatar}
-                  onChange={(e) => setEditAvatar(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white text-sm focus:outline-none focus:border-purple-500"
-                />
+                <div className="flex items-center gap-4">
+                  <label className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#0D0D1A] border border-dashed border-[#1E1E3A] text-gray-400 text-sm hover:border-purple-500/50 hover:text-purple-400 cursor-pointer transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {editAvatar ? 'Rasm almashtirish' : 'Galereyadan rasm tanlash'}
+                    <input type="file" accept="image/*" onChange={handleAvatarFile} className="hidden" />
+                  </label>
+                  {editAvatar && (
+                    <button
+                      type="button"
+                      onClick={() => setEditAvatar('')}
+                      className="px-3 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold hover:bg-red-500/20 transition-all"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                {editAvatar && (
+                  <div className="mt-3 flex items-center gap-3">
+                    <img src={editAvatar} alt="Avatar preview" className="w-12 h-12 rounded-full object-cover border-2 border-purple-500/30" />
+                    <span className="text-gray-500 text-[11px]">Yangi rasm tanlandi</span>
+                  </div>
+                )}
               </div>
               <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
                 <button
@@ -162,7 +194,7 @@ const ProfilePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-bold transition-all glow-purple"
+                  className="px-4 py-2 rounded-xl bg-purple-600 text-white text-sm font-bold transition-all glow-purple"
                 >
                   {t('save')}
                 </button>
@@ -170,6 +202,45 @@ const ProfilePage = () => {
             </form>
           </div>
         )}
+
+        {/* Sertifikatlar Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <span>🏆</span> {t('certBadge')}
+            </h2>
+            <Link to="/certificates" className="text-yellow-400 hover:text-yellow-300 text-sm font-semibold transition-colors">
+              {t('seeAll')}
+            </Link>
+          </div>
+          {user.testResults && user.testResults.filter(r => r.score >= 70).length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {user.testResults.filter(r => r.score >= 70).map((cert) => (
+                <div
+                  key={cert.id}
+                  className="bg-[#13132A] border border-yellow-500/20 rounded-2xl p-5 hover:border-yellow-500/40 transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+                      🎓
+                    </div>
+                    <span className="text-[10px] bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full font-bold">
+                      {cert.score}%
+                    </span>
+                  </div>
+                  <h3 className="text-white font-bold text-sm mb-1 leading-snug">{cert.title.replace('Level Test: ', '')}</h3>
+                  <p className="text-gray-500 text-[10px] uppercase tracking-wide">{cert.date}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-[#13132A] border border-[#1E1E3A] rounded-2xl p-8 text-center">
+              <div className="text-4xl mb-3">🏅</div>
+              <p className="text-gray-500 text-sm">{t('noCourses')}</p>
+              <Link to="/test" className="inline-block mt-3 text-yellow-400 hover:text-yellow-300 text-xs font-semibold">{t('allTests')}</Link>
+            </div>
+          )}
+        </div>
 
         {/* Dashboard Grid */}
         <div className="grid lg:grid-cols-3 gap-8">
@@ -199,8 +270,8 @@ const ProfilePage = () => {
                     <div>
                       {/* Badge / Icon */}
                       <div className="flex justify-between items-start mb-4">
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${course.color || 'from-purple-600 to-pink-600'} flex items-center justify-center text-2xl`}>
-                          {course.image || '🎨'}
+                        <div className={`w-12 h-12 rounded-xl ${course.color || 'bg-purple-600'} flex items-center justify-center`}>
+                          <TechLogo type={course.logoType || 'design'} size="w-6 h-6" className="text-white" />
                         </div>
                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${
                           course.status === 'COMPLETED'
@@ -222,7 +293,7 @@ const ProfilePage = () => {
                         </div>
                         <div className="w-full bg-[#0D0D1A] rounded-full h-1.5 overflow-hidden">
                           <div 
-                            className={`h-full rounded-full bg-gradient-to-r ${course.status === 'COMPLETED' ? 'from-green-500 to-emerald-400' : 'from-purple-600 to-cyan-500'}`}
+                            className={`h-full rounded-full ${course.status === 'COMPLETED' ? 'bg-green-500' : 'bg-purple-600'}`}
                             style={{ width: `${course.progress}%` }}
                           />
                         </div>
@@ -241,7 +312,7 @@ const ProfilePage = () => {
                       className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all ${
                         course.status === 'COMPLETED'
                           ? 'bg-[#1E1E3A] border border-green-500/30 text-green-400 hover:bg-green-600/10'
-                          : 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:opacity-90 glow-purple'
+                          : 'bg-purple-600 text-white hover:opacity-90 glow-purple'
                       }`}
                     >
                       {course.status === 'COMPLETED' ? t('downloadCert') : t('continueText')}
@@ -370,7 +441,7 @@ const ProfilePage = () => {
             <div className="p-6 md:p-12 overflow-x-auto flex justify-center bg-[#07070F]">
               <div 
                 id="printable-cert-area" 
-                className="w-[800px] h-[560px] bg-gradient-to-br from-[#FAF7EE] via-[#FFFDF6] to-[#F3ECD8] text-slate-800 p-8 border-[12px] border-double border-yellow-700 rounded-lg relative flex flex-col justify-between shadow-2xl flex-shrink-0"
+                className="w-[800px] h-[560px] bg-[#FAF7EE] text-slate-800 p-8 border-[12px] border-double border-yellow-700 rounded-lg relative flex flex-col justify-between shadow-2xl flex-shrink-0"
                 style={{ fontFamily: "'Georgia', serif" }}
               >
                 {/* Corner Ornaments */}

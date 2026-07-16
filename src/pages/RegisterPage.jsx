@@ -1,12 +1,14 @@
-﻿import { useState, useContext } from 'react';
-import { useSignIn } from '@clerk/clerk-react';
+import { useState, useContext } from 'react';
+import { useSignUp } from '@clerk/clerk-react';
 import { Link, useNavigate } from '../router/hashRouter';
 import { AppContext } from '../context/AppContext';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const { t } = useContext(AppContext);
   const navigate = useNavigate();
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,42 +16,24 @@ const LoginPage = () => {
   const [verifying, setVerifying] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
     if (!isLoaded) return;
     setLoading(true);
 
     try {
-      const result = await signIn.create({
-        identifier: email,
+      await signUp.create({
+        emailAddress: email,
         password,
+        firstName: name,
+        lastName: surname,
       });
 
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId });
-        navigate('/');
-        return;
-      }
-
-      if (result.status === 'needs_first_factor') {
-        await signIn.prepareFirstFactor({ strategy: 'email_code', emailAddressId: result.supportedFirstFactors?.find(f => f.strategy === 'email_code')?.emailAddressId || email });
-        setVerifying(true);
-      }
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+      setVerifying(true);
     } catch (err) {
-      const msg = err.errors?.[0]?.message || '';
-      if (msg.includes('verification') || msg.includes('strategy')) {
-        try {
-          const result = await signIn.create({ identifier: email });
-          const emailFactor = result.supportedFirstFactors?.find(f => f.strategy === 'email_code');
-          if (emailFactor) {
-            await signIn.prepareFirstFactor({ strategy: 'email_code', emailAddressId: emailFactor.emailAddressId });
-            setVerifying(true);
-            return;
-          }
-        } catch {}
-      }
-      setError(msg || 'Email yoki parol xato');
+      setError(err.errors?.[0]?.message || 'Ro\'yxatdan o\'tishda xatolik');
     } finally {
       setLoading(false);
     }
@@ -62,8 +46,7 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const result = await signIn.attemptFirstFactor({
-        strategy: 'email_code',
+      const result = await signUp.attemptEmailAddressVerification({
         code: verificationCode,
       });
 
@@ -92,7 +75,7 @@ const LoginPage = () => {
         <div className="bg-[#13132A]/90 border border-purple-500/10 rounded-3xl p-8 shadow-2xl relative">
           
           <h3 className="text-white font-bold text-lg mb-6 text-center">
-            {verifying ? 'Tasdiqlash' : t('tabLogin')}
+            {verifying ? 'Tasdiqlash' : t('tabRegister')}
           </h3>
 
           {error && (
@@ -126,7 +109,31 @@ const LoginPage = () => {
               </button>
             </form>
           ) : (
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-gray-400 text-xs font-semibold mb-2">Ism</label>
+                  <input
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Ismingiz"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white text-sm focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-400 text-xs font-semibold mb-2">Familiya</label>
+                  <input
+                    type="text"
+                    required
+                    value={surname}
+                    onChange={(e) => setSurname(e.target.value)}
+                    placeholder="Familiyangiz"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white text-sm focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-600"
+                  />
+                </div>
+              </div>
               <div>
                 <label className="block text-gray-400 text-xs font-semibold mb-2">Email</label>
                 <input
@@ -145,7 +152,7 @@ const LoginPage = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Kamida 8 ta belgi"
                   className="w-full px-4 py-3 rounded-xl bg-[#0D0D1A] border border-[#1E1E3A] text-white text-sm focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-600"
                 />
               </div>
@@ -154,15 +161,15 @@ const LoginPage = () => {
                 disabled={loading}
                 className="w-full py-3 mt-2 rounded-xl bg-purple-600 text-white font-bold text-sm hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Yuklanmoqda...' : t('login')}
+                {loading ? 'Yuklanmoqda...' : t('registerNow')}
               </button>
             </form>
           )}
 
           <p className="text-center mt-6 text-sm text-gray-500">
-            Hisobingiz yo'qmi?{' '}
-            <Link to="/register" className="text-purple-400 hover:text-purple-300 font-semibold">
-              {t('registerNow')}
+            Hisobingiz bormi?{' '}
+            <Link to="/login" className="text-purple-400 hover:text-purple-300 font-semibold">
+              {t('login')}
             </Link>
           </p>
 
@@ -179,4 +186,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

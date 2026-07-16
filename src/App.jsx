@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Router, Routes, Route, Outlet, Navigate, useLocation } from './router/hashRouter';
+import { useEffect, useState } from 'react';
+import { Router, Routes, Route, Outlet, useLocation } from './router/hashRouter';
+import { Protect } from '@clerk/clerk-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Navbar from './components/Navbar';
@@ -9,6 +10,7 @@ import LearningPage from './pages/LearningPage';
 import TestPage from './pages/TestPage';
 import TasksPage from './pages/TasksPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import PaymentPage from './pages/PaymentPage';
 import CertificatesPage from './pages/CertificatesPage';
@@ -19,10 +21,9 @@ import HelpCenterPage from './pages/HelpCenterPage';
 import PartnersPage from './pages/PartnersPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
-import { AppProvider, AppContext } from './context/AppContext';
+import { AppProvider } from './context/AppContext';
 import AuthModal from './components/AuthModal';
 
-// ============ Layout (Nested Route) ============
 const MainLayout = () => {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
@@ -37,7 +38,6 @@ const MainLayout = () => {
     <div className="min-h-screen bg-[#0D0D1A] flex flex-col">
       <Navbar />
       
-      {/* Route Loader Overlay */}
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0d0d1a]/85 backdrop-blur-md">
           <div className="flex flex-col items-center gap-4">
@@ -53,7 +53,6 @@ const MainLayout = () => {
       )}
 
       <main className="flex-1">
-        {/* Outlet — barcha child routelar shu yerga render bo'ladi */}
         <Outlet />
       </main>
       <Footer />
@@ -62,13 +61,6 @@ const MainLayout = () => {
   );
 };
 
-// ============ Protected Route ============
-const ProtectedRoute = ({ children }) => {
-  const { isLoggedIn } = useContext(AppContext);
-  return isLoggedIn ? children : <Navigate to="/login" replace />;
-};
-
-// ============ App ============
 const AppContent = () => {
   useEffect(() => {
     AOS.init({
@@ -80,85 +72,80 @@ const AppContent = () => {
 
   return (
     <Routes>
-      {/* ====== Public Layout Routes (Nested) ====== */}
       <Route element={<MainLayout />}>
-        {/* Public pages */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/help" element={<HelpCenterPage />} />
         <Route path="/partners" element={<PartnersPage />} />
 
-        {/* Protected pages (login talab qilinadi) */}
         <Route
           path="/learning"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <LearningPage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
         <Route
           path="/test"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <TestPage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
         <Route
           path="/tasks"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <TasksPage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <ProfilePage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
         <Route
           path="/payment"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <PaymentPage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
         <Route
           path="/certificates"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <CertificatesPage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
         <Route
           path="/notifications"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <NotificationsPage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
-
-        {/* ====== Dashboard — Nested Routes ichida ====== */}
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <Protect fallbackRedirectUrl="/login">
               <DashboardPage />
-            </ProtectedRoute>
+            </Protect>
           }
         />
 
-        {/* 404 Page */}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

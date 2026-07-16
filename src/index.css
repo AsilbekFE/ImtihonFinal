@@ -34,10 +34,7 @@ body {
 
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, #7C3AED, #06B6D4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #7C3AED;
   }
   
   .glow-purple {
@@ -108,11 +105,175 @@ body {
   background: #CBD5E1;
 }
 
+/* ============================================
+   Light Mode: Purple → Yellow overrides
+   ============================================ */
+
+/* Text gradient */
+.light .text-gradient {
+  color: #EAB308 !important;
+}
+
+/* Solid purple backgrounds → yellow */
+.light .bg-purple-600 {
+  background-color: #EAB308 !important;
+}
+.light .bg-purple-500 {
+  background-color: #EAB308 !important;
+}
+.light .bg-purple-700 {
+  background-color: #CA8A04 !important;
+}
+.light .bg-purple-800 {
+  background-color: #A16207 !important;
+}
+.light .bg-purple-900\/40 {
+  background-color: rgba(234, 179, 8, 0.15) !important;
+}
+.light .bg-purple-900\/50 {
+  background-color: rgba(234, 179, 8, 0.2) !important;
+}
+.light .bg-purple-600\/10 {
+  background-color: rgba(234, 179, 8, 0.1) !important;
+}
+.light .bg-purple-600\/15 {
+  background-color: rgba(234, 179, 8, 0.15) !important;
+}
+.light .bg-purple-600\/20 {
+  background-color: rgba(234, 179, 8, 0.2) !important;
+}
+.light .bg-purple-400\/10 {
+  background-color: rgba(234, 179, 8, 0.1) !important;
+}
+
+/* Purple borders → yellow */
+.light .border-purple-500\/10 {
+  border-color: rgba(234, 179, 8, 0.1) !important;
+}
+.light .border-purple-500\/15 {
+  border-color: rgba(234, 179, 8, 0.15) !important;
+}
+.light .border-purple-500\/20 {
+  border-color: rgba(234, 179, 8, 0.2) !important;
+}
+.light .border-purple-500\/30 {
+  border-color: rgba(234, 179, 8, 0.3) !important;
+}
+.light .border-purple-500\/40 {
+  border-color: rgba(234, 179, 8, 0.4) !important;
+}
+.light .border-purple-500 {
+  border-color: #EAB308 !important;
+}
+.light .border-purple-400\/30 {
+  border-color: rgba(234, 179, 8, 0.3) !important;
+}
+
+/* Purple text → yellow */
+.light .text-purple-300 {
+  color: #CA8A04 !important;
+}
+.light .text-purple-400 {
+  color: #CA8A04 !important;
+}
+.light .text-purple-500 {
+  color: #EAB308 !important;
+}
+
+/* Purple hover states → yellow */
+.light .hover\:bg-purple-500 {
+  background-color: #EAB308 !important;
+}
+.light .hover\:bg-purple-600\/10:hover {
+  background-color: rgba(234, 179, 8, 0.1) !important;
+}
+.light .hover\:border-purple-500\/50:hover {
+  border-color: rgba(234, 179, 8, 0.5) !important;
+}
+.light .hover\:border-purple-500\/40:hover {
+  border-color: rgba(234, 179, 8, 0.4) !important;
+}
+.light .hover\:border-purple-500\/30:hover {
+  border-color: rgba(234, 179, 8, 0.3) !important;
+}
+.light .hover\:text-purple-300:hover {
+  color: #CA8A04 !important;
+}
+.light .hover\:text-purple-400:hover {
+  color: #CA8A04 !important;
+}
+
+/* Purple glow → yellow */
+.light .glow-purple {
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.4) !important;
+}
+
+/* Purple shadow → yellow */
+.light .shadow-purple-600\/20 {
+  --tw-shadow-color: rgba(234, 179, 8, 0.2);
+}
+.light .shadow-purple-600\/30 {
+  --tw-shadow-color: rgba(234, 179, 8, 0.3);
+}
+.light .shadow-purple-500\/30 {
+  --tw-shadow-color: rgba(234, 179, 8, 0.3);
+}
+
+/* Purple ring → yellow */
+.light .ring-purple-500 {
+  --tw-ring-color: #EAB308 !important;
+}
+
+/* Pink → yellow */
+.light .bg-pink-500 {
+  background-color: #EAB308 !important;
+}
+.light .bg-pink-600 {
+  background-color: #EAB308 !important;
+}
+.light .bg-pink-700 {
+  background-color: #CA8A04 !important;
+}
+.light .text-pink-400 {
+  color: #CA8A04 !important;
+}
+.light .border-pink-500\/20 {
+  border-color: rgba(234, 179, 8, 0.2) !important;
+}
+
 .light .bg-\[\#0D0D1A\] {
   background-color: #F8FAFC !important;
 }
 
 .light .bg-\[\#07070F\] {
+  background-color: #F1F5F9 !important;
+}
+
+.light .bg-\[\#07070F\]\/55 {
+  background-color: rgba(241, 245, 249, 0.55) !important;
+}
+
+.light .bg-\[\#07070F\]\/30 {
+  background-color: rgba(241, 245, 249, 0.3) !important;
+}
+
+.light .bg-\[\#07070F\]\/70 {
+  background-color: rgba(241, 245, 249, 0.7) !important;
+}
+
+.light .bg-\[\#07070F\]\/40 {
+  background-color: rgba(241, 245, 249, 0.4) !important;
+}
+
+.light .bg-\[\#07070F\]\/90 {
+  background-color: rgba(241, 245, 249, 0.9) !important;
+}
+
+.light .bg-\[\#07070F\]\/90 {
+  background-color: rgba(241, 245, 249, 0.9) !important;
+}
+
+.light .bg-\[\#0F0F1A\] {
   background-color: #F1F5F9 !important;
 }
 
@@ -141,11 +302,11 @@ body {
 }
 
 .light .border-purple-500\/10 {
-  border-color: rgba(124, 58, 237, 0.1) !important;
+  border-color: rgba(234, 179, 8, 0.1) !important;
 }
 
 .light .border-purple-500\/20 {
-  border-color: rgba(124, 58, 237, 0.15) !important;
+  border-color: rgba(234, 179, 8, 0.15) !important;
 }
 
 .light .text-white {
@@ -154,15 +315,13 @@ body {
 
 /* Retain white text for specific labels, badges, and components */
 .light .text-white-force,
-.light .bg-gradient-to-r text,
-.light button.bg-gradient-to-r,
 .light button.bg-purple-600,
-.light button.bg-gradient-to-br,
-.light a.bg-gradient-to-r,
-.light .bg-gradient-to-r,
-.light .bg-gradient-to-r *,
-.light .bg-gradient-to-br *,
+.light button.bg-yellow-500,
+.light button.bg-green-600,
+.light a.bg-purple-600,
+.light a.bg-yellow-500,
 .light .bg-purple-600 *,
+.light .bg-yellow-500 *,
 .light .bg-green-600 *,
 .light .bg-red-600 *,
 .light .bg-black\/50 *,
@@ -176,6 +335,10 @@ body {
   color: #475569 !important;
 }
 
+.light .text-gray-300 {
+  color: #334155 !important;
+}
+
 .light .text-gray-500 {
   color: #64748B !important;
 }
@@ -186,11 +349,11 @@ body {
 
 .light .glass {
   background: rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(124, 58, 237, 0.1) !important;
+  border: 1px solid rgba(234, 179, 8, 0.1) !important;
 }
 
-.light .bg-gradient-to-br.from-\[\#13132A\] {
-  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%) !important;
+.light .bg-\[\#13132A\] {
+  background-color: #FFFFFF !important;
   border-color: #E2E8F0 !important;
 }
 
@@ -253,4 +416,135 @@ body {
 /* Fix sidebar bg */
 .light .bg-\[\#0D0D1A\] input {
   background-color: #F8FAFC !important;
+}
+
+/* Profile section light mode fixes */
+.light .text-green-400 { color: #16A34A !important; }
+.light .text-cyan-300 { color: #0891B2 !important; }
+.light .text-cyan-400 { color: #0891B2 !important; }
+.light .text-yellow-400 { color: #D97706 !important; }
+.light .text-yellow-800 { color: #92400E !important; }
+.light .text-yellow-700 { color: #B45309 !important; }
+.light .bg-yellow-600\/15 { background-color: rgba(202, 138, 4, 0.15) !important; }
+.light .border-yellow-500\/30 { border-color: rgba(234, 179, 8, 0.3) !important; }
+.light .border-yellow-500\/20 { border-color: rgba(234, 179, 8, 0.2) !important; }
+.light .bg-yellow-500\/10 { background-color: rgba(234, 179, 8, 0.1) !important; }
+.light .bg-green-600\/10 { background-color: rgba(22, 163, 74, 0.1) !important; }
+.light .border-green-500\/20 { border-color: rgba(34, 197, 94, 0.2) !important; }
+.light .border-green-500\/30 { border-color: rgba(34, 197, 94, 0.3) !important; }
+.light .bg-cyan-600\/20 { background-color: rgba(8, 145, 178, 0.2) !important; }
+.light .border-cyan-500\/20 { border-color: rgba(6, 182, 212, 0.2) !important; }
+.light .bg-purple-600\/10 { background-color: rgba(147, 51, 234, 0.1) !important; }
+.light .bg-purple-600\/15 { background-color: rgba(147, 51, 234, 0.15) !important; }
+.light .bg-purple-600\/20 { background-color: rgba(147, 51, 234, 0.2) !important; }
+.light .text-purple-300 { color: #7C3AED !important; }
+.light .bg-purple-950\/5 { background-color: rgba(88, 28, 135, 0.05) !important; }
+.light .border-purple-600\/30 { border-color: rgba(147, 51, 234, 0.3) !important; }
+
+/* Clerk UserButton overrides */
+.clerk-userButtonPopoverCard {
+  background-color: #13132A !important;
+  border: 1px solid #1E1E3A !important;
+}
+
+.clerk-userButtonPopoverActions {
+  background-color: #13132A !important;
+}
+
+.clerk-userButtonPopoverActionButton {
+  color: #D1D5DB !important;
+}
+
+.clerk-userButtonPopoverActionButton:hover {
+  background-color: rgba(147, 51, 234, 0.2) !important;
+  color: white !important;
+}
+
+.clerk-userButtonPopoverFooter {
+  background-color: #0D0D1A !important;
+  border-top: 1px solid #1E1E3A !important;
+}
+
+/* Code editor — always dark regardless of light mode */
+.dark-editor,
+.dark-editor .bg-\[\#13132A\],
+.dark-editor .bg-\[\#07070F\],
+.dark-editor .bg-\[\#13132A\]\/50 {
+  background-color: #13132A !important;
+}
+
+.dark-editor .bg-\[\#07070F\]\/30,
+.dark-editor .bg-\[\#07070F\]\/40,
+.dark-editor .bg-\[\#07070F\]\/55 {
+  background-color: rgba(7, 7, 15, 0.3) !important;
+}
+
+.dark-editor .bg-\[\#07070F\]\/70 {
+  background-color: rgba(7, 7, 15, 0.7) !important;
+}
+
+.dark-editor .bg-\[\#07070F\]\/90 {
+  background-color: rgba(7, 7, 15, 0.9) !important;
+}
+
+.dark-editor .border-\[\#1E1E3A\] {
+  border-color: #1E1E3A !important;
+}
+
+.dark-editor .text-white {
+  color: #ffffff !important;
+}
+
+.dark-editor .text-gray-400 {
+  color: #9CA3AF !important;
+}
+
+.dark-editor .text-gray-500 {
+  color: #6B7280 !important;
+}
+
+.dark-editor .text-gray-600 {
+  color: #4B5563 !important;
+}
+
+/* Mentors section always dark — only section & card backgrounds */
+.light .mentors-dark-section {
+  background-color: #07070F !important;
+}
+
+.light .mentors-dark-section .bg-\[\#07070F\]\/50,
+.light .mentors-dark-section .bg-\[\#07070F\] {
+  background-color: #07070F !important;
+}
+
+.light .mentors-dark-section .bg-\[\#13132A\],
+.light .mentors-dark-section .bg-\[\#13132A\]\/95,
+.light .mentors-dark-section .bg-\[\#13132A\]\/40 {
+  background-color: #13132A !important;
+}
+
+.light .mentors-dark-section .bg-\[\#0D0D1A\] {
+  background-color: #0D0D1A !important;
+}
+
+.light .mentors-dark-section .bg-purple-600\/15,
+.light .mentors-dark-section .bg-purple-600\/10 {
+  background-color: rgba(147, 51, 234, 0.15) !important;
+}
+
+.light .mentors-dark-section .bg-purple-500 {
+  background-color: #A855F7 !important;
+}
+
+.light .mentors-dark-section .bg-gray-700 {
+  background-color: #374151 !important;
+}
+
+.light .mentors-dark-section .border-\[\#1E1E3A\] {
+  border-color: #1E1E3A !important;
+}
+
+.light .mentors-dark-section .border-purple-500\/30,
+.light .mentors-dark-section .border-purple-500\/20 {
+  border-color: rgba(147, 51, 234, 0.3) !important;
 }
